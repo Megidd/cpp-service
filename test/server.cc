@@ -5,11 +5,11 @@ using namespace httplib;
 const char *html = R"(
 <form id="formElem">
   <div>
-    <label>STL file of 3D model</label>
+    <label>STL file of 3D model containing mesh:</label>
     <input type="file" name="stl_file" accept="stl/*">
   </div>
   <div>
-    <label>JSON file of placeholder coordinates</label>
+    <label>JSON file of placeholder coordinates:</label>
     <input type="file" name="json_file" accept="json/*">
   </div>
   <div>
