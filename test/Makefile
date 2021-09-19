@@ -2,10 +2,10 @@
 CXX = g++-10
 CXXFLAGS = -std=c++11 -I.. -Wall -Wextra -pthread
 
-all: server
+all: test
 
-server : server.cc ../httplib.h Makefile
-	$(CXX) -o server $(CXXFLAGS) server.cc
+test : test.cc ../httplib.h Makefile
+	$(CXX) -o test $(CXXFLAGS) test.cc
 
 clean:
-	rm server
+	rm test
