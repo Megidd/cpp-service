@@ -1,3 +1,3 @@
 # C++ Service
 
-Provide a C++ logic as a service. Accessible by HTTP requests.
+A C++ logic is provided as a service. Accessible by HTTP requests. See test to figure out how.
