@@ -3,7 +3,7 @@
 #include <vector>
 
 int main(int argc, char** argv) {
-    std::cout << "Main logic started!\n";
+    std::cout << "Logic executable started!\n";
 
     // https://stackoverflow.com/a/442137/3405291
     std::vector<std::string> args(argv + 1, argv + argc);
