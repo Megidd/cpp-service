@@ -30,7 +30,8 @@ int main(int argc, char **argv)
         }
     }
 
-    std::cout << "STL==" << pathStl << " | JSON==" << pathJson;
+    std::cout << "STL == " << pathStl << std::endl;
+    std::cout << "JSON == " << pathJson << std::endl;
 
     std::vector<float> coords, normals;
     std::vector<unsigned int> tris, solids;
