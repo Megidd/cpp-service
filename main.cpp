@@ -38,6 +38,7 @@ int main(int argc, char **argv)
 
     bool good = stl_reader::ReadStlFile(pathStl.c_str(), coords, normals, tris, solids);
     if (!good) {
+        std::cerr << "Couldn't load input STL " << std::endl;
         return -1;
     }
 
