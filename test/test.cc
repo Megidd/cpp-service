@@ -44,14 +44,12 @@ int main(void) {
          << "json file length: " << json_file.content.length() << std::endl
          << "json file name: " << json_file.filename << std::endl;
 
-    {
-      std::ofstream ofs(stl_file.filename, std::ios::binary);
-      ofs << stl_file.content;
-    }
-    {
-      std::ofstream ofs(json_file.filename);
-      ofs << json_file.content;
-    }
+    // Call the logic executable then wait for it to finish
+    // https://stackoverflow.com/a/5155626/3405291
+    // https://stackoverflow.com/a/31521217/3405291
+    char command[50];
+    std::sprintf (command, "../build/cpp-service %s %s", stl_file.filename.c_str(), json_file.filename.c_str());
+    std::system(command);
 
     res.set_content("done", "text/plain");
   });
