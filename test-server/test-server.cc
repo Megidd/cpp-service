@@ -48,7 +48,7 @@ int main(void) {
     // https://stackoverflow.com/a/5155626/3405291
     // https://stackoverflow.com/a/31521217/3405291
     char command[50];
-    std::sprintf (command, "../build/cpp-service %s %s", stl_file.filename.c_str(), json_file.filename.c_str());
+    std::sprintf (command, "../build/cpp-service -stl %s -json %s", stl_file.filename.c_str(), json_file.filename.c_str());
     std::system(command);
 
     res.set_content("done", "text/plain");
