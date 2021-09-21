@@ -7,6 +7,9 @@
 
 #include "stl_writer.h"
 
+#include "libslic3r/libslic3r.h"
+#include "libslic3r/Point.hpp"
+
 int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
@@ -45,20 +48,21 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    // Extract TriangleMesh
+    std::vector<Slic3r::Vec3f> points;
+    std::vector<Slic3r::Vec3i> facets;
+
     const size_t numTris = tris.size() / 3;
     for (size_t itri = 0; itri < numTris; ++itri)
     {
-        std::cout << "coordinates of triangle " << itri << ": ";
+        // coordinates of triangle for itri
         for (size_t icorner = 0; icorner < 3; ++icorner)
         {
             float *c = &coords[3 * tris[3 * itri + icorner]];
-            std::cout << "(" << c[0] << ", " << c[1] << ", " << c[2] << ") ";
+            points.push_back({c[0], c[1], c[2]});
         }
-        std::cout << std::endl;
 
-        float *n = &normals[3 * itri];
-        std::cout << "normal of triangle " << itri << ": "
-                  << "(" << n[0] << ", " << n[1] << ", " << n[2] << ")\n";
+        facets.push_back({tris[3 * itri + 0], tris[3 * itri + 1], tris[3 * itri + 2]});
     }
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
