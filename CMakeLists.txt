@@ -4,6 +4,8 @@ project(cpp-service VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
+include_directories("deps/eigen-3.3.9")
+
 add_executable(cpp-service src/main.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
