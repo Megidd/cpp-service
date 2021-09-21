@@ -3,7 +3,7 @@
 
 #include "libslic3r/SLA/SupportTree.hpp"
 #include "libslic3r/SLA/Concurrency.hpp"
-#include "supporthandler/supporting/trianglemesh.h"
+#include "trianglemesh.h"
 #include <mutex> // for std::lock_guard
 
 namespace Slic3r {
