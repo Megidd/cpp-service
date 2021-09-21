@@ -11,6 +11,10 @@
 #include "libslic3r/Point.hpp"
 #include "libslic3r/SLA/SupportTreeConfig.hpp"
 #include "libslic3r/SLA/SupportPoint.hpp"
+#include "trianglemesh.h"
+#include "libslic3r/SLA/IndexedMesh.hpp"
+#include "libslic3r/SLA/SupportableMesh.h"
+#include "libslic3r/SLA/SupportTreeBuilder.hpp"
 
 #include <cfloat> // for float max
 
@@ -119,6 +123,11 @@ int main(int argc, char **argv)
 
     for (auto sp : support_points)
         std::cout << " x:" << sp.pos.x() << " y:" << sp.pos.y() << " z:" << sp.pos.z() << std::endl;
+
+    Slic3r::TriangleMesh tm = Slic3r::TriangleMesh(points, facets);
+    Slic3r::sla::IndexedMesh emesh = Slic3r::sla::IndexedMesh(tm);
+    Slic3r::sla::SupportableMesh sm = Slic3r::sla::SupportableMesh(Slic3r::sla::SupportableMesh(emesh, support_points, cfg));
+    Slic3r::sla::SupportTreeBuilder treebuilder = Slic3r::sla::SupportTreeBuilder();
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
