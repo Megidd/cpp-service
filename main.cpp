@@ -5,6 +5,8 @@
 #define STL_READER_NO_EXCEPTIONS // functions will return false if an error occurred
 #include "stl_reader.h"
 
+#include "stl_writer.h"
+
 int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
@@ -58,4 +60,6 @@ int main(int argc, char **argv)
         std::cout << "normal of triangle " << itri << ": "
                   << "(" << n[0] << ", " << n[1] << ", " << n[2] << ")\n";
     }
+
+    stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
