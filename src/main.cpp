@@ -75,6 +75,9 @@ int main(int argc, char **argv)
         facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
     }
 
+    if (points.size() < 1 || facets.size() < 1)
+        return 0;
+
     // Support tree configuration
     // TODO: UI should provide.
     Slic3r::sla::SupportTreeConfig cfg;
