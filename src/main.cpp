@@ -14,6 +14,8 @@
 
 #include <cfloat> // for float max
 
+#include "json.hpp"
+
 int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
@@ -93,6 +95,17 @@ int main(int argc, char **argv)
 
     // Compute support points for the item mesh
     std::vector<Slic3r::sla::SupportPoint> placeholders;
+
+    // read JSON file
+    std::ifstream fJson(pathJson.c_str());
+    nlohmann::json jJson;
+    fJson >> jJson;
+
+    // iterate the array
+    for (nlohmann::json::iterator it = jJson.begin(); it != jJson.end(); ++it)
+    {
+        std::cout << *it << '\n';
+    }
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
