@@ -62,7 +62,7 @@ int main(int argc, char **argv)
             points.push_back({c[0], c[1], c[2]});
         }
 
-        facets.push_back({tris[3 * itri + 0], tris[3 * itri + 1], tris[3 * itri + 2]});
+        facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
     }
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
