@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     cfg.base_height_mm = 1.0f; // Thickness
 
     // Compute support points for the item mesh
-    std::vector<Slic3r::sla::SupportPoint> placeholders;
+    std::vector<Slic3r::sla::SupportPoint> support_points;
 
     // read JSON file
     std::ifstream fJson(pathJson.c_str());
@@ -105,7 +105,20 @@ int main(int argc, char **argv)
     for (nlohmann::json::iterator it = jJson.begin(); it != jJson.end(); ++it)
     {
         std::cout << *it << '\n';
+        std::string xStr = (*it)["x"];
+        std::string yStr = (*it)["y"];
+        std::string zStr = (*it)["z"];
+        std::string rStr = (*it)["head_front_radius"];
+        float x = std::stod(xStr);
+        float y = std::stod(yStr);
+        float z = std::stod(zStr);
+        float r = std::stod(rStr);
+        Slic3r::sla::SupportPoint sp = Slic3r::sla::SupportPoint(x, y, z, r);
+        support_points.emplace_back(sp);
     }
+
+    for (auto sp : support_points)
+        std::cout << " x:" << sp.pos.x() << " y:" << sp.pos.y() << " z:" << sp.pos.z() << std::endl;
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
