@@ -9,8 +9,9 @@
 
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Point.hpp"
+#include "libslic3r/SLA/SupportTreeConfig.hpp"
 
-#include <cfloat>
+#include <cfloat> // for float max
 
 int main(int argc, char **argv)
 {
@@ -73,6 +74,18 @@ int main(int argc, char **argv)
 
         facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
     }
+
+    // Support tree configuration
+    // TODO: UI should provide.
+    Slic3r::sla::SupportTreeConfig cfg;
+    cfg.object_elevation_mm = minZ;
+    cfg.head_penetration_mm = 0.1f;
+    cfg.head_front_radius_mm = 1.0f;
+    cfg.head_back_radius_mm = 2.0f;
+    cfg.head_fallback_radius_mm = 2.0f;
+    cfg.head_width_mm = 5.0f; // length
+    cfg.base_radius_mm = 10.0f;
+    cfg.base_height_mm = 1.0f; // Thickness
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
