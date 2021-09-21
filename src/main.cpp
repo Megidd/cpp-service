@@ -10,6 +10,7 @@
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Point.hpp"
 #include "libslic3r/SLA/SupportTreeConfig.hpp"
+#include "libslic3r/SLA/SupportPoint.hpp"
 
 #include <cfloat> // for float max
 
@@ -89,6 +90,9 @@ int main(int argc, char **argv)
     cfg.head_width_mm = 5.0f; // length
     cfg.base_radius_mm = 10.0f;
     cfg.base_height_mm = 1.0f; // Thickness
+
+    // Compute support points for the item mesh
+    std::vector<Slic3r::sla::SupportPoint> placeholders;
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
