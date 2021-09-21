@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     }
 
     // Needed by configuration:
-    float object_elevation_mm = FLT_MAX;
+    float minZ = FLT_MAX;
 
     // Extract TriangleMesh
     std::vector<Slic3r::Vec3f> points;
@@ -67,8 +67,8 @@ int main(int argc, char **argv)
             points.push_back({c[0], c[1], c[2]});
 
             // Needed by configuration:
-            if (c[2] < object_elevation_mm)
-                object_elevation_mm = c[2];
+            if (c[2] < minZ)
+                minZ = c[2];
         }
 
         facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
