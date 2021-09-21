@@ -10,6 +10,8 @@
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Point.hpp"
 
+#include <cfloat>
+
 int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
@@ -48,6 +50,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    // Needed by configuration:
+    float object_elevation_mm = FLT_MAX;
+
     // Extract TriangleMesh
     std::vector<Slic3r::Vec3f> points;
     std::vector<Slic3r::Vec3i> facets;
@@ -60,6 +65,10 @@ int main(int argc, char **argv)
         {
             float *c = &coords[3 * tris[3 * itri + icorner]];
             points.push_back({c[0], c[1], c[2]});
+
+            // Needed by configuration:
+            if (c[2] < object_elevation_mm)
+                object_elevation_mm = c[2];
         }
 
         facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
