@@ -16,14 +16,28 @@ include_directories("src")
 include_directories("deps/tbb/include")
 
 
-add_library(TBBLIB SHARED IMPORTED)
-set_target_properties(TBBLIB PROPERTIES
-        IMPORTED_LOCATION "deps/tbb/lib/intel64/gcc4.8/libtbb.so"
-        INTERFACE_INCLUDE_DIRECTORIES "deps/tbb/include")
+find_library(TBB_LIB
+    NAMES
+    tbbbind_debug
+    tbbbind
+    tbb_debug
+    tbbmalloc_debug
+    tbbmalloc_proxy_debug
+    tbbmalloc_proxy
+    tbbmalloc
+    tbb_preview_debug
+    tbb_preview
+    tbb
+    HINTS "${CMAKE_PREFIX_PATH}/deps/tbb/lib/intel64/gcc4.8"
+)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/trianglemesh.cpp src/libslic3r/SLA/IndexedMesh.cpp)
+add_executable(${PROJECT_NAME}
+src/main.cpp
+src/trianglemesh.cpp
+src/libslic3r/SLA/IndexedMesh.cpp
+)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${TBBLIB})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${TBB_LIB})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
