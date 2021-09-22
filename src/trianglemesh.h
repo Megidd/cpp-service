@@ -32,6 +32,15 @@ public:
     void require_shared_vertices() {/* TODO: not needed now */};
 
 private:
+    Vec3f CrossProduct(Vec3f a, Vec3f b) const
+    {
+        float x = a.y() * b.z() - a.z() * b.y();
+        float y = a.z() * b.x() - a.x() * b.z();
+        float z = a.x() * b.y() - a.y() * b.x();
+        return Vec3f{x, y, z};
+    }
+
+private:
     std::vector<Vec3f> m_vertices;
     std::vector<Vec3i> m_indices;
 };

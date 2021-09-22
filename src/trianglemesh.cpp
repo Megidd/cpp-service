@@ -71,12 +71,4 @@ Vec3d TriangleMesh::normal_by_face_id(int face_id) const
     return Vec3d(static_cast<double>(N.x()), static_cast<double>(N.y()), static_cast<double>(N.z()));
 }
 
-Vec3f CrossProduct(Vec3f a, Vec3f b)
-{
-	float x = a.y()*b.z() - a.z()*b.y();
-	float y = a.z()*b.x() - a.x()*b.z();
-	float z = a.x()*b.y() - a.y()*b.x();
-	return Vec3f{x, y, z};
-}
-
 } // namespace Slic3r
