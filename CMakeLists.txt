@@ -19,7 +19,7 @@ set_target_properties(TBBLIB PROPERTIES
         IMPORTED_LOCATION "deps/tbb/lib/intel64/gcc4.8/libtbb.so"
         INTERFACE_INCLUDE_DIRECTORIES "deps/tbb/include")
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/trianglemesh.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${TBBLIB})
 
