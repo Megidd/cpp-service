@@ -15,6 +15,7 @@
 #include "libslic3r/SLA/IndexedMesh.hpp"
 #include "libslic3r/SLA/SupportableMesh.h"
 #include "libslic3r/SLA/SupportTreeBuilder.hpp"
+#include "libslic3r/SLA/SupportTreeBuildsteps.hpp"
 
 #include <cfloat> // for float max
 
@@ -128,6 +129,9 @@ int main(int argc, char **argv)
     Slic3r::sla::IndexedMesh emesh = Slic3r::sla::IndexedMesh(tm);
     Slic3r::sla::SupportableMesh sm = Slic3r::sla::SupportableMesh(Slic3r::sla::SupportableMesh(emesh, support_points, cfg));
     Slic3r::sla::SupportTreeBuilder treebuilder = Slic3r::sla::SupportTreeBuilder();
+
+    Slic3r::sla::SupportTreeBuildsteps::execute(treebuilder, sm);
+    Slic3r::TriangleMesh output_mesh = treebuilder.retrieve_mesh();
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
 }
