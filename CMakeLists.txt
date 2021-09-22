@@ -15,7 +15,7 @@ include_directories("deps/libigl-2.3.0/include") # header-only =)
 include_directories("src")
 include_directories("deps/tbb/include")
 
-
+# https://stackoverflow.com/a/41909627/3405291
 find_library(TBB_LIB NAMES tbb HINTS "deps/tbb/lib/intel64/gcc4.8")
 find_library(TBBbind_LIB NAMES tbbbind HINTS "deps/tbb/lib/intel64/gcc4.8")
 find_library(TBBmalloc_proxy_LIB NAMES tbbmalloc_proxy HINTS "deps/tbb/lib/intel64/gcc4.8")
