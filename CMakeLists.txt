@@ -28,7 +28,7 @@ find_library(TBB_LIB
     tbb_preview_debug
     tbb_preview
     tbb
-    HINTS "${CMAKE_PREFIX_PATH}/deps/tbb/lib/intel64/gcc4.8"
+    HINTS "deps/tbb/lib/intel64/gcc4.8"
 )
 
 add_executable(${PROJECT_NAME}
