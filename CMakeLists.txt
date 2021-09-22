@@ -16,20 +16,11 @@ include_directories("src")
 include_directories("deps/tbb/include")
 
 
-find_library(TBB_LIB
-    NAMES
-    tbbbind_debug
-    tbbbind
-    tbb_debug
-    tbbmalloc_debug
-    tbbmalloc_proxy_debug
-    tbbmalloc_proxy
-    tbbmalloc
-    tbb_preview_debug
-    tbb_preview
-    tbb
-    HINTS "deps/tbb/lib/intel64/gcc4.8"
-)
+find_library(TBB_LIB NAMES tbb HINTS "deps/tbb/lib/intel64/gcc4.8")
+find_library(TBBbind_LIB NAMES tbbbind HINTS "deps/tbb/lib/intel64/gcc4.8")
+find_library(TBBmalloc_proxy_LIB NAMES tbbmalloc_proxy HINTS "deps/tbb/lib/intel64/gcc4.8")
+find_library(TBBmalloc_LIB NAMES tbbmalloc HINTS "deps/tbb/lib/intel64/gcc4.8")
+find_library(TBB_preview_LIB NAMES tbb_preview HINTS "deps/tbb/lib/intel64/gcc4.8")
 
 add_executable(${PROJECT_NAME}
 src/main.cpp
@@ -37,7 +28,13 @@ src/trianglemesh.cpp
 src/libslic3r/SLA/IndexedMesh.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${TBB_LIB})
+target_link_libraries(${PROJECT_NAME} PUBLIC
+${TBB_LIB}
+${TBBbind_LIB}
+${TBBmalloc_proxy_LIB}
+${TBBmalloc_LIB}
+${TBB_preview_LIB}
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
