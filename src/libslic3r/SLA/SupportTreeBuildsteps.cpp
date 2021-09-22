@@ -2,8 +2,6 @@
 
 #include <set> // for std::set
 
-#include <QDebug>
-
 // https://stackoverflow.com/a/44440517/3405291
 // to avoid conflict between Qt macro and "foreach" class methods
 #undef foreach
@@ -131,8 +129,8 @@ bool SupportTreeBuildsteps::execute(SupportTreeBuilder &   builder,
 
     if(sm.cfg.ground_facing_only) {
         program[ROUTING_NONGROUND] = []() {
-            qDebug() << "info"
-                << "Skipping model-facing supports as requested.";
+            std::cout << "info"
+                << "Skipping model-facing supports as requested." << std::endl;
         };
     }
 
@@ -883,8 +881,8 @@ void SupportTreeBuildsteps::routing_to_ground()
         Head &h = m_builder.head(hid);
 
         if (!create_ground_pillar(h.junction_point(), h.dir, h.r_back_mm, h.id)) {
-            qDebug() << "warning"
-                << "Pillar cannot be created for support point id: " << hid;
+            std::cout << "warning"
+                << "Pillar cannot be created for support point id: " << hid << std::endl;
             m_iheads_onmodel.emplace_back(h.id);
             continue;
         }
@@ -1013,7 +1011,7 @@ bool SupportTreeBuildsteps::connect_to_model_body(Head &head)
     double w = dist - 2 * head.r_pin_mm - head.r_back_mm;
 
     if (w < 0.) {
-        qDebug() << "error" << "Pinhead width is negative!";
+        std::cout << "error" << "Pinhead width is negative!" << std::endl;
         w = 0.;
     }
 
@@ -1085,7 +1083,7 @@ void SupportTreeBuildsteps::routing_to_model()
         if (connect_to_model_body(head)) { return; }
 
         // We have failed to route this head.
-        qDebug() << "warning" << "Failed to route model facing support point. ID: " << idx;
+        std::cout << "warning" << "Failed to route model facing support point. ID: " << idx << std::endl;
 
 
         head.invalidate();
