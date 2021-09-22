@@ -1,7 +1,7 @@
 #ifndef SLA_CONTOUR3D_HPP
 #define SLA_CONTOUR3D_HPP
 
-#include "supporthandler/supporting/trianglemesh.h"
+#include "trianglemesh.h"
 
 namespace Slic3r {
 
