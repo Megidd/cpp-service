@@ -10,11 +10,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories("deps/eigen-3.3.9") # header-only =)
-include_directories("deps/libigl-2.3.0/include") # header-only =)
+include_directories("deps/eigen-3.3.9")                 # header-only =)
+include_directories("deps/libigl-2.3.0/include")        # header-only =)
 include_directories("src")
-include_directories("deps/tbb/include")
-include_directories("src/clipper")
+include_directories("deps/tbb/include")                 # linked to
+include_directories("src/clipper")                      # as source code
+include_directories("deps/cereal-1.3.0/include")        # header-only =)
 
 # https://stackoverflow.com/a/41909627/3405291
 find_library(LIB_TBB                NAMES tbb               HINTS "deps/tbb/lib/intel64/gcc4.8")
