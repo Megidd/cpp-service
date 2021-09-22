@@ -2,7 +2,7 @@
 #include "Concurrency.hpp"
 
 #include <libslic3r/AABBTreeIndirect.hpp>
-#include "supporthandler/supporting/trianglemesh.h"
+#include "trianglemesh.h"
 
 #include <numeric>
 
