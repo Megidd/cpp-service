@@ -16,6 +16,7 @@ include_directories("src")
 include_directories("deps/tbb/include")                 # linked to
 include_directories("src/clipper")                      # as source code
 include_directories("deps/cereal-1.3.0/include")        # header-only =)
+include_directories("src/glu-libtess/include/")         # as source code
 
 # https://stackoverflow.com/a/41909627/3405291
 find_library(LIB_TBB                NAMES tbb               HINTS "deps/tbb/lib/intel64/gcc4.8")
@@ -29,6 +30,7 @@ AUX_SOURCE_DIRECTORY(src/libslic3r/             SRC_libslic3r)
 AUX_SOURCE_DIRECTORY(src/libslic3r/SLA/         SRC_libslic3r_SLA)
 AUX_SOURCE_DIRECTORY(src/libslic3r/Optimize/    SRC_libslic3r_Optimize)
 AUX_SOURCE_DIRECTORY(src/clipper/               SRC_clipper)
+AUX_SOURCE_DIRECTORY(src/glu-libtess/src/       SRC_glu_libtess)
 
 add_executable(${PROJECT_NAME}
 src/main.cpp
@@ -37,6 +39,7 @@ ${SRC_libslic3r}
 ${SRC_libslic3r_SLA}
 ${SRC_libslic3r_Optimize}
 ${SRC_clipper}
+${SRC_glu_libtess}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
