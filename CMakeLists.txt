@@ -16,7 +16,7 @@ include_directories("src")
 include_directories("deps/tbb/include")                 # linked to
 include_directories("src/clipper")                      # as source code
 include_directories("deps/cereal-1.3.0/include")        # header-only =)
-include_directories("src/glu-libtess/include/")         # as source code
+include_directories("src/glu-libtess/include/")         # linked to
 include_directories("deps/libnest2d/build/installdir/include/") # linked to
 include_directories("deps/nlopt/build/installdir/include/") # linked to
 
@@ -27,6 +27,7 @@ find_library(LIB_TBBmalloc_proxy    NAMES tbbmalloc_proxy   HINTS "deps/tbb/lib/
 find_library(LIB_TBBmalloc          NAMES tbbmalloc         HINTS "deps/tbb/lib/intel64/gcc4.8")
 find_library(LIB_TBB_preview        NAMES tbb_preview       HINTS "deps/tbb/lib/intel64/gcc4.8")
 
+find_library(LIB_glu_libtess NAMES glu-libtess HINTS "src/glu-libtess/build/")
 find_library(LIB_nest2d NAMES nest2d_clipper_nlopt HINTS "deps/libnest2d/build/installdir/lib/")
 find_library(LIB_nlopt NAMES nlopt HINTS "deps/nlopt/build/installdir/lib64/")
 
@@ -35,7 +36,6 @@ AUX_SOURCE_DIRECTORY(src/libslic3r/             SRC_libslic3r)
 AUX_SOURCE_DIRECTORY(src/libslic3r/SLA/         SRC_libslic3r_SLA)
 AUX_SOURCE_DIRECTORY(src/libslic3r/Optimize/    SRC_libslic3r_Optimize)
 AUX_SOURCE_DIRECTORY(src/clipper/               SRC_clipper)
-AUX_SOURCE_DIRECTORY(src/glu-libtess/src/       SRC_glu_libtess)
 
 add_executable(${PROJECT_NAME}
 src/main.cpp
@@ -44,7 +44,6 @@ ${SRC_libslic3r}
 ${SRC_libslic3r_SLA}
 ${SRC_libslic3r_Optimize}
 ${SRC_clipper}
-${SRC_glu_libtess}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -53,6 +52,7 @@ ${LIB_TBBbind}
 ${LIB_TBBmalloc_proxy}
 ${LIB_TBBmalloc}
 ${LIB_TBB_preview}
+${LIB_glu_libtess}
 ${LIB_nest2d}
 ${LIB_nlopt}
 )
