@@ -10,9 +10,6 @@
 
 #include "libslic3r/SLA/Clustering.hpp"
 
-// For progress bar update
-#include "supporthandler/supporthandler.h"
-
 #ifdef BYPASS_CXX17_FEATURES
 #include <experimental/optional>
 #endif // BYPASS_CXX17_FEATURES
@@ -67,10 +64,7 @@ SupportTreeBuildsteps::SupportTreeBuildsteps(SupportTreeBuilder &   builder,
     }
 }
 
-bool SupportTreeBuildsteps::execute(SupportTreeBuilder &   builder,
-                                    const SupportableMesh &sm
-                                    , SupportHandler *suppHandler /* For progress bar update */
-                                    )
+bool SupportTreeBuildsteps::execute(SupportTreeBuilder &   builder, const SupportableMesh &sm)
 {
     if(sm.pts.empty()) return false;
 
@@ -135,7 +129,7 @@ bool SupportTreeBuildsteps::execute(SupportTreeBuilder &   builder,
     }
 
     // Let's define a simple automaton that will run our program.
-    auto progress = [&builder, &pc, suppHandler /* For progress bar update */] () {
+    auto progress = [&builder, &pc] () {
         static const std::array<std::string, NUM_STEPS> stepstr {
             "Start", /* "Starting", */
             "Filter", /* "Filtering", */
@@ -179,12 +173,6 @@ bool SupportTreeBuildsteps::execute(SupportTreeBuilder &   builder,
         }
 
         builder.ctl().statuscb(stepstate[pc], stepstr[pc]);
-
-        // For progress bar update
-        suppHandler->updateProgressPercent(stepstate[pc] /* current step percent */
-                                           , 100 /* total count */
-                                           , stepstr[pc] /* step string */
-                                           );
     };
 
     // Just here we run the computation...

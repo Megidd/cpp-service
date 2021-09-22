@@ -15,9 +15,6 @@
 #include "libslic3r/SLA/SpatIndex.hpp"
 #include "libslic3r/MTUtils.hpp"
 
-// For progress bar update
-class SupportHandler;
-
 namespace Slic3r {
 namespace sla {
 
@@ -387,9 +384,7 @@ public:
 
     inline void merge_result() { m_builder.merged_mesh(); }
 
-    static bool execute(SupportTreeBuilder & builder, const SupportableMesh &sm
-                        , SupportHandler *suppHandler /* for progress bar update */
-                        );
+    static bool execute(SupportTreeBuilder & builder, const SupportableMesh &sm);
 };
 
 } // namespace sla
