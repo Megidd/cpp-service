@@ -14,6 +14,7 @@ include_directories("deps/eigen-3.3.9") # header-only =)
 include_directories("deps/libigl-2.3.0/include") # header-only =)
 include_directories("src")
 include_directories("deps/tbb/include")
+include_directories("src/clipper")
 
 # https://stackoverflow.com/a/41909627/3405291
 find_library(LIB_TBB                NAMES tbb               HINTS "deps/tbb/lib/intel64/gcc4.8")
@@ -26,6 +27,7 @@ find_library(LIB_TBB_preview        NAMES tbb_preview       HINTS "deps/tbb/lib/
 AUX_SOURCE_DIRECTORY(src/libslic3r/             SRC_libslic3r)
 AUX_SOURCE_DIRECTORY(src/libslic3r/SLA/         SRC_libslic3r_SLA)
 AUX_SOURCE_DIRECTORY(src/libslic3r/Optimize/    SRC_libslic3r_Optimize)
+AUX_SOURCE_DIRECTORY(src/clipper/               SRC_clipper)
 
 add_executable(${PROJECT_NAME}
 src/main.cpp
@@ -33,6 +35,7 @@ src/trianglemesh.cpp
 ${SRC_libslic3r}
 ${SRC_libslic3r_SLA}
 ${SRC_libslic3r_Optimize}
+${SRC_clipper}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
