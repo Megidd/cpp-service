@@ -38,12 +38,11 @@ public:
                        std::vector<unsigned int> &tris);
 
 private:
-    Vec3f CrossProduct(Vec3f a, Vec3f b) const
+    Vec3f CrossProduct(Vec3f v1, Vec3f v2) const
     {
-        float x = a.y() * b.z() - a.z() * b.y();
-        float y = a.z() * b.x() - a.x() * b.z();
-        float z = a.x() * b.y() - a.y() * b.x();
-        return Vec3f{x, y, z};
+        return Vec3f(v1.y() * v2.z() - v1.z() * v2.y(),
+                     v1.z() * v2.x() - v1.x() * v2.z(),
+                     v1.x() * v2.y() - v1.y() * v2.x());
     }
 
 private:
