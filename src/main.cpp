@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
     Slic3r::sla::SupportTreeBuildsteps::execute(treebuilder, sm);
     Slic3r::TriangleMesh output_mesh = treebuilder.retrieve_mesh();
-    std::cout << "output mesh is received =)" << std::endl;
+    std::cout << "output mesh is returned =)" << std::endl;
 
     stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
     std::cout << "output mesh is saved as STL" << std::endl;
