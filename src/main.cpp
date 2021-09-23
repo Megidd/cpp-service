@@ -116,7 +116,7 @@ int main(int argc, char **argv)
     // iterate the array
     for (nlohmann::json::iterator it = jJson.begin(); it != jJson.end(); ++it)
     {
-        std::cout << *it << '\n';
+        std::cout << *it << std::endl;
         std::string xStr = (*it)["x"];
         std::string yStr = (*it)["y"];
         std::string zStr = (*it)["z"];
