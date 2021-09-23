@@ -149,4 +149,11 @@ int main(int argc, char **argv)
     // Save output mesh as STL
     stl_writer::WriteStlFile("cpp-service-output.stl", output_coords, output_normals, output_tris);
     std::cout << "output mesh is saved as STL" << std::endl;
+
+    // Save input mesh as STL to debug
+    std::vector<float> input_coords, input_normals;
+    std::vector<unsigned int> input_tris;
+    tm.rawDataArrays(input_coords, input_normals, input_tris);
+    stl_writer::WriteStlFile("cpp-service-input.stl", input_coords, input_normals, input_tris);
+    std::cout << "input mesh is saved as STL to compare and debug" << std::endl;
 }
