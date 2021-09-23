@@ -31,6 +31,12 @@ public:
     // Called inside SupportTreeBuilder::merged_mesh
     void require_shared_vertices() {/* TODO: not needed now */};
 
+    // A method to be able to save mesh as STL easily,
+    // with external tools and libraries.
+    void rawDataArrays(std::vector<float> &coords,
+                       std::vector<float> &normals,
+                       std::vector<unsigned int> &tris);
+
 private:
     Vec3f CrossProduct(Vec3f a, Vec3f b) const
     {

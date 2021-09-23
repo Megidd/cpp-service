@@ -71,4 +71,39 @@ Vec3d TriangleMesh::normal_by_face_id(int face_id) const
     return Vec3d(static_cast<double>(N.x()), static_cast<double>(N.y()), static_cast<double>(N.z()));
 }
 
+void TriangleMesh::rawDataArrays(std::vector<float> &coords,
+                                 std::vector<float> &normals,
+                                 std::vector<unsigned int> &tris)
+{
+    coords.clear();
+    normals.clear();
+    tris.clear();
+    coords.resize(m_vertices.size() * 3);
+    normals.resize(m_indices.size() * 3);
+    tris.resize(m_indices.size() * 3);
+    for (int face_id = 0; face_id < m_indices.size(); face_id++)
+    {
+        Vec3i f = m_indices.at(face_id);
+        tris[face_id * 3 + 0] = f.x();
+        tris[face_id * 3 + 1] = f.y();
+        tris[face_id * 3 + 2] = f.z();
+        Vec3f v0 = m_vertices.at(f.x());
+        coords[f.x() * 3 + 0] = v0.x();
+        coords[f.x() * 3 + 1] = v0.y();
+        coords[f.x() * 3 + 2] = v0.z();
+        Vec3f v1 = m_vertices.at(f.y());
+        coords[f.y() * 3 + 0] = v1.x();
+        coords[f.y() * 3 + 1] = v1.y();
+        coords[f.y() * 3 + 2] = v1.z();
+        Vec3f v2 = m_vertices.at(f.z());
+        coords[f.z() * 3 + 0] = v2.x();
+        coords[f.z() * 3 + 1] = v2.y();
+        coords[f.z() * 3 + 2] = v2.z();
+        Vec3d n = normal_by_face_id(face_id);
+        normals[face_id * 3 + 0] = static_cast<float>(n.x());
+        normals[face_id * 3 + 1] = static_cast<float>(n.y());
+        normals[face_id * 3 + 2] = static_cast<float>(n.z());
+    }
+}
+
 } // namespace Slic3r

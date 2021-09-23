@@ -86,6 +86,13 @@ int main(int argc, char **argv)
     if (points.size() < 1 || facets.size() < 1)
         return 0;
 
+    // Input raw data arrays are not needed any longer.
+    // Free up memory.
+    coords.clear();
+    normals.clear();
+    tris.clear();
+    solids.clear();
+
     // Support tree configuration
     // TODO: UI should provide.
     Slic3r::sla::SupportTreeConfig cfg;
@@ -134,6 +141,12 @@ int main(int argc, char **argv)
     Slic3r::TriangleMesh output_mesh = treebuilder.retrieve_mesh();
     std::cout << "output mesh is returned =)" << std::endl;
 
-    stl_writer::WriteStlFile("cpp-service-output.stl", coords, normals, tris);
+    // Get output mesh raw arrays to be able to save those as STL by external tool
+    std::vector<float> output_coords, output_normals;
+    std::vector<unsigned int> output_tris;
+    output_mesh.rawDataArrays(output_coords, output_normals, output_tris);
+
+    // Save output mesh as STL
+    stl_writer::WriteStlFile("cpp-service-output.stl", output_coords, output_normals, output_tris);
     std::cout << "output mesh is saved as STL" << std::endl;
 }
