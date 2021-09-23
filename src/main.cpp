@@ -121,17 +121,11 @@ int main(int argc, char **argv)
         std::string yStr = (*it)["y"];
         std::string zStr = (*it)["z"];
         std::string rStr = (*it)["head_front_radius"];
-        std::string nxStr = (*it)["normalx"];
-        std::string nyStr = (*it)["normaly"];
-        std::string nzStr = (*it)["normalz"];
         float x = std::stod(xStr);
         float y = std::stod(yStr);
         float z = std::stod(zStr);
         float r = std::stod(rStr);
-        float nx = std::stod(nxStr);
-        float ny = std::stod(nyStr);
-        float nz = std::stod(nzStr);
-        Slic3r::sla::SupportPoint sp = Slic3r::sla::SupportPoint(x, y, z, r, false, nx, ny, nz);
+        Slic3r::sla::SupportPoint sp = Slic3r::sla::SupportPoint(x, y, z, r);
         support_points.emplace_back(sp);
     }
 

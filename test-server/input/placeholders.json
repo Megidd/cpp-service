@@ -3,45 +3,30 @@
         "x": "7.27864",
         "y": "0.00620079",
         "z": "15.5064",
-        "head_front_radius": "0.05",
-        "normalx": "0.845667",
-        "normaly": "0.102983",
-        "normalz": "-0.523681"
+        "head_front_radius": "0.05"
     },
     {
         "x": "5.8386",
         "y": "0.934446",
         "z": "12.7508",
-        "head_front_radius": "0.05",
-        "normalx": "0.481132",
-        "normaly": "0.704591",
-        "normalz": "-0.521597"
+        "head_front_radius": "0.05"
     },
     {
         "x": "1.96074",
         "y": "3.38556",
         "z": "10.5717",
-        "head_front_radius": "0.05",
-        "normalx": "0.36196",
-        "normaly": "0.539881",
-        "normalz": "-0.759943"
+        "head_front_radius": "0.05"
     },
     {
         "x": "-0.0156631",
         "y": "4.43852",
         "z": "10.7796",
-        "head_front_radius": "0.05",
-        "normalx": "0.0422444",
-        "normaly": "0.645866",
-        "normalz": "-0.762281"
+        "head_front_radius": "0.05"
     },
     {
         "x": "-8.00624",
         "y": "0.323734",
         "z": "13.1863",
-        "head_front_radius": "0.05",
-        "normalx": "-0.693182",
-        "normaly": "0.25516",
-        "normalz": "-0.674086"
+        "head_front_radius": "0.05"
     }
 ]
