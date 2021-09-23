@@ -59,32 +59,11 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // Needed by configuration:
+    // Needed by Prusa configuration.
     float minZ = FLT_MAX;
 
-    // Extract TriangleMesh
-    std::vector<Slic3r::Vec3f> points;
-    std::vector<Slic3r::Vec3i> facets;
-
-    const size_t numTris = tris.size() / 3;
-    for (size_t itri = 0; itri < numTris; ++itri)
-    {
-        // coordinates of triangle for itri
-        for (size_t icorner = 0; icorner < 3; ++icorner)
-        {
-            float *c = &coords[3 * tris[3 * itri + icorner]];
-            points.push_back({c[0], c[1], c[2]});
-
-            // Needed by configuration:
-            if (c[2] < minZ)
-                minZ = c[2];
-        }
-
-        facets.push_back({static_cast<int>(tris[3 * itri + 0]), static_cast<int>(tris[3 * itri + 1]), static_cast<int>(tris[3 * itri + 2])});
-    }
-
-    if (points.size() < 1 || facets.size() < 1)
-        return 0;
+    // Construct mesh by raw data arrays.
+    Slic3r::TriangleMesh input_mesh = Slic3r::TriangleMesh(coords, tris, minZ);
 
     // Input raw data arrays are not needed any longer.
     // Free up memory.
@@ -132,8 +111,8 @@ int main(int argc, char **argv)
     for (auto sp : support_points)
         std::cout << " x:" << sp.pos.x() << " y:" << sp.pos.y() << " z:" << sp.pos.z() << std::endl;
 
-    Slic3r::TriangleMesh tm = Slic3r::TriangleMesh(points, facets);
-    Slic3r::sla::IndexedMesh emesh = Slic3r::sla::IndexedMesh(tm);
+    // Call the logic.
+    Slic3r::sla::IndexedMesh emesh = Slic3r::sla::IndexedMesh(input_mesh);
     Slic3r::sla::SupportableMesh sm = Slic3r::sla::SupportableMesh(Slic3r::sla::SupportableMesh(emesh, support_points, cfg));
     Slic3r::sla::SupportTreeBuilder treebuilder = Slic3r::sla::SupportTreeBuilder();
 
@@ -153,7 +132,7 @@ int main(int argc, char **argv)
     // Save input mesh as STL to debug
     std::vector<float> input_coords, input_normals;
     std::vector<unsigned int> input_tris;
-    tm.rawDataArrays(input_coords, input_normals, input_tris);
+    input_mesh.rawDataArrays(input_coords, input_normals, input_tris);
     stl_writer::WriteStlFile("cpp-service-input.stl", input_coords, input_normals, input_tris);
     std::cout << "input mesh is saved as STL to compare and debug" << std::endl;
 }

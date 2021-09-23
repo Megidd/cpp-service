@@ -14,6 +14,11 @@ public:
     TriangleMesh(const std::vector<Vec3f> &vertices, const std::vector<Vec3i> &indices);
     TriangleMesh(const std::vector<Vec3d> &vertices, const std::vector<Vec3i> &indices);
 
+    // Construct by raw data arrays.
+    TriangleMesh(const std::vector<float> &coords, const std::vector<unsigned int> &tris,
+                 float &minZ // Needed by Prusa configuration. To be computed here.
+    );
+
     // Methods needed by IndexedMesh (and libIGL)
     const std::vector<Vec3f>& vertices() const { return m_vertices; };
     const std::vector<Vec3i>& indices()  const { return m_indices; };

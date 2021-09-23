@@ -29,6 +29,44 @@ TriangleMesh::TriangleMesh(const std::vector<Vec3d> &vertices, const std::vector
         m_vertices.emplace_back(v.cast<float>());
 }
 
+// Construct by raw data arrays.
+TriangleMesh::TriangleMesh(
+    const std::vector<float> &coords,
+    const std::vector<unsigned int> &tris,
+    float &minZ // Needed by Prusa configuration. To be computed here.
+)
+{
+    if (coords.size() < 1 || tris.size() < 1)
+        return;
+
+    minZ = FLT_MAX;
+
+    m_vertices.clear();
+    m_indices.clear();
+
+    m_vertices.resize(coords.size() / 3);
+    m_indices.resize(tris.size() / 3);
+
+    const size_t numTris = tris.size() / 3;
+    for (size_t itri = 0; itri < numTris; ++itri)
+    {
+        // coordinates of triangle for itri
+        for (size_t icorner = 0; icorner < 3; ++icorner)
+        {
+            const float *c = &coords[3 * tris[3 * itri + icorner]];
+            m_vertices[tris[3 * itri + icorner]] = Vec3f(c[0], c[1], c[2]);
+
+            // Needed by configuration:
+            if (c[2] < minZ)
+                minZ = c[2];
+        }
+
+        m_indices[itri] = Vec3i(static_cast<int>(tris[3 * itri + 0]),
+                                        static_cast<int>(tris[3 * itri + 1]),
+                                        static_cast<int>(tris[3 * itri + 2]));
+    }
+}
+
 BoundingBoxf3 TriangleMesh::bounding_box() const
 {
     BoundingBoxf3 bb;
