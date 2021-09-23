@@ -91,12 +91,12 @@ int main(int argc, char **argv)
     Slic3r::sla::SupportTreeConfig cfg;
     cfg.object_elevation_mm = minZ;
     cfg.head_penetration_mm = 0.1f;
-    cfg.head_front_radius_mm = 1.0f;
-    cfg.head_back_radius_mm = 2.0f;
-    cfg.head_fallback_radius_mm = 2.0f;
-    cfg.head_width_mm = 5.0f; // length
-    cfg.base_radius_mm = 10.0f;
-    cfg.base_height_mm = 1.0f; // Thickness
+    cfg.head_front_radius_mm = 0.05f;
+    cfg.head_back_radius_mm = 0.25f;
+    cfg.head_fallback_radius_mm = 0.25f;
+    cfg.head_width_mm = 2.0f; // length
+    cfg.base_radius_mm = 1.5f;
+    cfg.base_height_mm = 0.3f; // Thickness
 
     // Compute support points for the item mesh
     std::vector<Slic3r::sla::SupportPoint> support_points;
