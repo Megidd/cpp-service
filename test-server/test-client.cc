@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    httplib::Client cli("localhost", 58080);
+    httplib::Client cli("127.0.0.1", 58080);
 
     httplib::Params params_getPoints{
         {"mesh", "~/repos/cpp-service/test-server/input/teapot_10elev.stl"},

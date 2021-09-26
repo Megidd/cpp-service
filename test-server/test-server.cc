@@ -22,7 +22,7 @@ int main(void)
                std::cout << "mesh: " << mesh << std::endl
                          << "config: " << config << std::endl
                          << "slices: " << slices << std::endl
-                         << "args: "<< args << std::endl;
+                         << "args: " << args << std::endl;
 
                // Call the logic executable then wait for it to finish
                // https://stackoverflow.com/a/5155626/3405291
@@ -72,6 +72,11 @@ int main(void)
            });
 
   int port = 58080;
+  std::string address = "0.0.0.0"; // All addresses
   std::cout << "=> service going to listen on port: " << port << std::endl;
-  svr.listen("localhost", port);
+  if (!svr.listen(address.c_str(), port, 0))
+  {
+    std::cerr << "Server stopped in error state" << std::endl;
+    return EXIT_FAILURE;
+  }
 }
