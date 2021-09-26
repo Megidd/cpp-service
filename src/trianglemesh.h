@@ -6,7 +6,7 @@
 
 namespace Slic3r {
 
-// Wrapper class arround Qt3D mesh with needed methods by IndexedMesh (and libIGL)
+// Wrapper class arround mesh with needed methods by IndexedMesh (and libIGL)
 class TriangleMesh
 {
 public:
