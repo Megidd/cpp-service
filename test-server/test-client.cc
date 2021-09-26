@@ -5,11 +5,27 @@ int main(void)
 {
     httplib::Client cli("localhost", 58080);
 
+    httplib::Params params_getPoints{
+        {"mesh", "~/repos/cpp-service/test-server/input/teapot_10elev.stl"},
+        {"config", "~/repos/cpp-service/test-server/input/config.json"},
+        {"slices", "~/repos/cpp-service/test-server/input/slices.json"},
+        {"args", "~/repos/cpp-service/test-server/input/autoargs.json"}};
+
+    if (auto res = cli.Post("/get-points", params_getPoints))
+    {
+        std::cout << res->status << std::endl;
+        std::cout << res->get_header_value("Content-Type") << std::endl;
+        std::cout << res->body << std::endl;
+    }
+    else
+    {
+        std::cout << "get points: error code: " << res.error() << std::endl;
+    }
+
     httplib::Params params_generate{
         {"mesh", "~/repos/cpp-service/test-server/input/teapot_10elev.stl"},
         {"config", "~/repos/cpp-service/test-server/input/config.json"},
-        {"points", "~/repos/cpp-service/test-server/input/points.json"}
-        };
+        {"points", "~/repos/cpp-service/test-server/input/points.json"}};
 
     if (auto res = cli.Post("/generate", params_generate))
     {
@@ -19,7 +35,7 @@ int main(void)
     }
     else
     {
-        std::cout << "error code: " << res.error() << std::endl;
+        std::cout << "generate: error code: " << res.error() << std::endl;
     }
 
     return 0;

@@ -107,6 +107,10 @@ namespace supporting
         return support_points;
     }
 
+    void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs) {
+        std::cout << "Get points..." << std::endl;
+    }
+
     void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
     {
         // Needed by Prusa configuration.

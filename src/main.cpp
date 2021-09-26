@@ -46,21 +46,29 @@ int main(int argc, char **argv)
         {
             pathConfig = *++i;
         }
+        else if (*i == "-slices")
+        {
+            pathSlices = *++i;
+        }
+        else if (*i == "-args")
+        {
+            pathArgs = *++i;
+        }
         else if (*i == "-points")
         {
             pathPoints = *++i;
         }
     }
 
+    // Common for all cases:
     std::cout << "mesh == " << pathMesh << std::endl
-              << "config == " << pathConfig << std::endl
-              << "points == " << pathPoints << std::endl;
+              << "config == " << pathConfig << std::endl;
 
     switch (intent)
     {
     case GetPoints:
         std::cout << "Get auto points..." << std::endl;
-        // TODO: call function.
+        supporting::getPoints(pathMesh, pathConfig, pathSlices, pathArgs);
         break;
     case Generate:
         std::cout << "Generate mesh for points..." << std::endl;
