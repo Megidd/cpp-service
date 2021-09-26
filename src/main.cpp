@@ -25,34 +25,58 @@ int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
 
+    enum Intent
+    {
+        Generate = 1,
+        GetPoints
+    };
+
     // https://stackoverflow.com/a/442137/3405291
     std::vector<std::string> args(argv + 1, argv + argc);
-    std::string pathStl, pathJson;
+    std::string pathMesh, pathConfig;
+    std::string pathSlices, pathArgs; // Get points
+    std::string pathPoints;           // Generate
+
+    Intent intent;
 
     for (auto i = args.begin(); i != args.end(); ++i)
     {
         if (*i == "-h" || *i == "--help")
         {
-            std::cout << "Syntax: cpp-service -stl <stl_file> -json <json_file>" << std::endl;
+            std::cout << "Syntax: cpp-service --get-points -mesh <stl_file> -config <json_file> -slices <json_file> -args <json_file>" << std::endl
+                      << "Syntax: cpp-service --generate   -mesh <stl_file> -config <json_file> -points <json_file>" << std::endl;
             return 0;
         }
-        else if (*i == "-stl")
+        else if (*i == "--get-points")
         {
-            pathStl = *++i;
+            intent = GetPoints;
         }
-        else if (*i == "-json")
+        else if (*i == "--generate")
         {
-            pathJson = *++i;
+            intent = Generate;
+        }
+        else if (*i == "-mesh")
+        {
+            pathMesh = *++i;
+        }
+        else if (*i == "-config")
+        {
+            pathConfig = *++i;
+        }
+        else if (*i == "-points")
+        {
+            pathPoints = *++i;
         }
     }
 
-    std::cout << "STL == " << pathStl << std::endl;
-    std::cout << "JSON == " << pathJson << std::endl;
+    std::cout << "mesh == " << pathMesh << std::endl
+              << "config == " << pathConfig << std::endl
+              << "points == " << pathPoints << std::endl;
 
     std::vector<float> coords, normals;
     std::vector<unsigned int> tris, solids;
 
-    bool good = stl_reader::ReadStlFile(pathStl.c_str(), coords, normals, tris, solids);
+    bool good = stl_reader::ReadStlFile(pathMesh.c_str(), coords, normals, tris, solids);
     if (!good)
     {
         std::cerr << "Couldn't load input STL " << std::endl;
@@ -73,29 +97,34 @@ int main(int argc, char **argv)
     solids.clear();
 
     // Support tree configuration
-    // TODO: UI should provide.
+    // read JSON file
+    std::ifstream fConfig(pathConfig.c_str());
+    nlohmann::json jConfig;
+    fConfig >> jConfig;
+    std::cout << "config: " << jConfig << std::endl;
+
     Slic3r::sla::SupportTreeConfig cfg;
-    cfg.object_elevation_mm = minZ;
-    cfg.head_penetration_mm = 0.1f;
-    cfg.head_front_radius_mm = 0.05f;
-    cfg.head_back_radius_mm = 0.25f;
-    cfg.head_fallback_radius_mm = 0.25f;
-    cfg.head_width_mm = 2.0f; // length
-    cfg.base_radius_mm = 1.5f;
-    cfg.base_height_mm = 0.3f; // Thickness
+    cfg.object_elevation_mm = minZ; // Just to be sure it's correct, compute it!
+    cfg.head_penetration_mm = std::stod(std::string(jConfig["head_penetration_mm"]));
+    cfg.head_front_radius_mm = std::stod(std::string(jConfig["head_front_radius_mm"]));
+    cfg.head_back_radius_mm = std::stod(std::string(jConfig["head_back_radius_mm"]));
+    cfg.head_fallback_radius_mm = std::stod(std::string(jConfig["head_fallback_radius_mm"]));
+    cfg.head_width_mm = std::stod(std::string(jConfig["head_width_mm"])); // length
+    cfg.base_radius_mm = std::stod(std::string(jConfig["base_radius_mm"]));
+    cfg.base_height_mm = std::stod(std::string(jConfig["base_height_mm"])); // Thickness
 
     // Compute support points for the item mesh
     std::vector<Slic3r::sla::SupportPoint> support_points;
 
     // read JSON file
-    std::ifstream fJson(pathJson.c_str());
-    nlohmann::json jJson;
-    fJson >> jJson;
+    std::ifstream fPoints(pathPoints.c_str());
+    nlohmann::json jPoints;
+    fPoints >> jPoints;
 
     // iterate the array
-    for (nlohmann::json::iterator it = jJson.begin(); it != jJson.end(); ++it)
+    for (nlohmann::json::iterator it = jPoints.begin(); it != jPoints.end(); ++it)
     {
-        std::cout << *it << std::endl;
+        std::cout << "point: " << *it << std::endl;
         std::string xStr = (*it)["x"];
         std::string yStr = (*it)["y"];
         std::string zStr = (*it)["z"];

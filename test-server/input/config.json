@@ -1,0 +1,10 @@
+{
+    "object_elevation_mm": "10",
+    "head_penetration_mm": "0.1",
+    "head_front_radius_mm": "0.05",
+    "head_back_radius_mm": "0.25",
+    "head_fallback_radius_mm": "0.25",
+    "head_width_mm": " 2.0",
+    "base_radius_mm": "1.5",
+    "base_height_mm": "0.3"
+}
