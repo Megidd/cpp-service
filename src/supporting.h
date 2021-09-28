@@ -3,6 +3,7 @@
 
 #include <string>
 #include <random>
+#include <iomanip> // for std::setw
 
 #define STL_READER_NO_EXCEPTIONS // functions will return false if an error occurred
 #include "stl_reader.h"
@@ -224,6 +225,24 @@ namespace supporting
         return args;
     }
 
+    void savePoints(const std::vector<Slic3r::sla::SupportPoint> &support_points)
+    {
+        nlohmann::json jPoints = nlohmann::json::array();
+        for (auto point : support_points)
+        {
+            nlohmann::json jPoint = nlohmann::json::object();
+            jPoint["x"] = std::to_string(point.pos.x());
+            jPoint["y"] = std::to_string(point.pos.y());
+            jPoint["z"] = std::to_string(point.pos.z());
+            jPoint["head_front_radius"] = std::to_string(point.head_front_radius);
+            jPoints.push_back(jPoint);
+        }
+
+        // write prettified JSON to file
+        std::ofstream o("auto_points.json");
+        o << std::setw(4) << jPoints << std::endl;
+    }
+
     void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs)
     {
         std::cout << "Get points..." << std::endl;
@@ -269,13 +288,8 @@ namespace supporting
 
         // Get the calculated support points.
         std::vector<Slic3r::sla::SupportPoint> support_points = point_gen.output();
-        for (auto point : support_points)
-        {
-            std::cout << "point: " << point.pos.x() << " , "
-                      << point.pos.y() << " , "
-                      << point.pos.z() << std::endl;
-        }
-        std::cout << "output points are ready ;)" << std::endl;
+        savePoints(support_points);
+        std::cout << "output points are saved as JSON ;)" << std::endl;
     }
 
     void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
