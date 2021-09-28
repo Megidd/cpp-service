@@ -118,18 +118,21 @@ namespace supporting
         {
             Slic3r::ExPolygons exps;
 
-            //std::cout << "layer: " << *it << std::endl;
+            std::cout << "layer: " << *it << std::endl;
             auto jExps = (*it)["Expolygons"];
             for (nlohmann::json::iterator jt = jExps.begin(); jt != jExps.end(); ++jt)
             {
-                //std::cout << "contour: " << *jt << std::endl;
+                std::cout << "contour: " << *jt << std::endl;
                 auto jContour = (*jt)["Contour"];
                 Slic3r::Polygon contour;
                 for (nlohmann::json::iterator kt = jContour.begin(); kt != jContour.end(); ++kt)
                 {
                     std::cout << "x, y: " << *kt << std::endl;
-                    double x = std::stod(std::string((*kt)["X"]));
-                    double y = std::stod(std::string((*kt)["Y"]));
+                    double x = (*kt)["X"];
+                    // Fixed: [json.exception.type_error.302] type must be string, but is number
+                    std::cout << "x: " << x << std::endl;
+                    double y = (*kt)["Y"];
+                    std::cout << "y: " << y << std::endl;
                     // Account for conversion from floating-point to integer
                     x /= SCALING_FACTOR;
                     y /= SCALING_FACTOR;
@@ -142,30 +145,37 @@ namespace supporting
 
                 auto jHoles = (*jt)["Holes"];
                 Slic3r::Polygons holes;
-                for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
+                if (!jHoles.is_null())
                 {
-                    auto jHole = (*lt)["Hole"];
-                    Slic3r::Polygon hole;
-                    for (nlohmann::json::iterator mt = jHole.begin(); mt != jHole.end(); ++mt)
+                    std::cout << "Holes is not null!" << std::endl;
+                    for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
                     {
-                        double x = std::stod(std::string((*mt)["X"]));
-                        double y = std::stod(std::string((*mt)["Y"]));
-                        // Account for conversion from floating-point to integer
-                        x /= SCALING_FACTOR;
-                        y /= SCALING_FACTOR;
-                        // For some reason, slicing output points are mirrored in Y direction
-                        // TODO: figure out why
-                        y = -y;
-                        // Point class stores coordinates as integer
-                        hole.points.emplace_back(Slic3r::Point(x, y));
-                    }
+                        std::cout << "holes: " << *lt << std::endl;
+                        auto jHole = (*lt)["Hole"];
+                        Slic3r::Polygon hole;
+                        for (nlohmann::json::iterator mt = jHole.begin(); mt != jHole.end(); ++mt)
+                        {
+                            std::cout << "hole: " << *mt << std::endl;
+                            // Fixed: [json.exception.type_error.302] type must be string, but is number
+                            double x = (*mt)["X"];
+                            double y = (*mt)["Y"];
+                            // Account for conversion from floating-point to integer
+                            x /= SCALING_FACTOR;
+                            y /= SCALING_FACTOR;
+                            // For some reason, slicing output points are mirrored in Y direction
+                            // TODO: figure out why
+                            y = -y;
+                            // Point class stores coordinates as integer
+                            hole.points.emplace_back(Slic3r::Point(x, y));
+                        }
 
-                    // Previously, a hole was added with empty points.
-                    // That was causing a runtime error.
-                    // Currently, a hole is added only if its points are non-empty.
-                    // Therefore fixing the runtime error.
-                    if (hole.points.size() > 0)
-                        holes.emplace_back(hole);
+                        // Previously, a hole was added with empty points.
+                        // That was causing a runtime error.
+                        // Currently, a hole is added only if its points are non-empty.
+                        // Therefore fixing the runtime error.
+                        if (hole.points.size() > 0)
+                            holes.emplace_back(hole);
+                    }
                 }
 
                 Slic3r::ExPolygon exp;
