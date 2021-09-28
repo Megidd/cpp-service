@@ -195,6 +195,32 @@ namespace supporting
         return slices;
     }
 
+    struct Args {
+        float density = 0.0f;
+        float layer_height = 0.0f;
+        float min_dist = 0.0f;
+        float zMax = 0.0f;
+        float zMin = 0.0f;
+    };
+
+    Args loadArgs(std::string pathArgs)
+    {
+        Args args;
+        // read JSON file
+        std::ifstream fArgs(pathArgs.c_str());
+        nlohmann::json jArgs;
+        fArgs >> jArgs;
+        std::cout << "auto args: " << jArgs << std::endl;
+
+        args.density = std::stod(std::string(jArgs["density"]));
+        args.layer_height = std::stod(std::string(jArgs["layer_height"]));
+        args.min_dist = std::stod(std::string(jArgs["min_dist"]));
+        args.zMax = std::stod(std::string(jArgs["zMax"]));
+        args.zMin = std::stod(std::string(jArgs["zMin"]));
+
+        return args;
+    }
+
     void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs)
     {
         std::cout << "Get points..." << std::endl;
@@ -209,6 +235,8 @@ namespace supporting
         // Step 2. From slices get support_points
 
         std::vector<Slic3r::ExPolygons> slices = loadSlices(pathSlices);
+        Args args = loadArgs(pathArgs);
+        std::vector<float> slicegrid = Slic3r::grid(args.zMin, args.zMax, args.layer_height);
     }
 
     void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
