@@ -17,6 +17,7 @@
 #include "libslic3r/SLA/SupportableMesh.h"
 #include "libslic3r/SLA/SupportTreeBuilder.hpp"
 #include "libslic3r/SLA/SupportTreeBuildsteps.hpp"
+#include "libslic3r/ExPolygon.hpp"
 
 #include <cfloat> // for float max
 
@@ -107,8 +108,26 @@ namespace supporting
         return support_points;
     }
 
-    void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs) {
+    std::vector<Slic3r::ExPolygons> loadSlices(std::string pathSlices)
+    {
+        std::vector<Slic3r::ExPolygons> slices;
+        return slices;
+    }
+
+    void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs)
+    {
         std::cout << "Get points..." << std::endl;
+
+        // Needed by Prusa configuration.
+        float minZ = FLT_MAX;
+
+        Slic3r::TriangleMesh input_mesh = loadMesh(pathMesh, minZ);        // minZ is computed
+        Slic3r::sla::SupportTreeConfig cfg = loadConfig(pathConfig, minZ); // minZ is consumed
+
+        // Step 1. Convert JSON to slices
+        // Step 2. From slices get support_points
+
+        std::vector<Slic3r::ExPolygons> slices = loadSlices(pathSlices);
     }
 
     void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
