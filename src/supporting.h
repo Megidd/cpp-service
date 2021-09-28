@@ -111,6 +111,18 @@ namespace supporting
     std::vector<Slic3r::ExPolygons> loadSlices(std::string pathSlices)
     {
         std::vector<Slic3r::ExPolygons> slices;
+
+        // read JSON file
+        std::ifstream fSlices(pathSlices.c_str());
+        nlohmann::json jSlices;
+        fSlices >> jSlices;
+
+        // iterate the array
+        for (nlohmann::json::iterator it = jSlices["Layers"].begin(); it != jSlices["Layers"].end(); ++it)
+        {
+            std::cout << "layer: " << *it << std::endl;
+        }
+
         return slices;
     }
 
