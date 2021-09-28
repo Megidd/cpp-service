@@ -92,7 +92,7 @@ namespace supporting
         // iterate the array
         for (nlohmann::json::iterator it = jPoints.begin(); it != jPoints.end(); ++it)
         {
-            std::cout << "point: " << *it << std::endl;
+            //std::cout << "point: " << *it << std::endl;
             float x = std::stod(std::string((*it)["x"]));
             float y = std::stod(std::string((*it)["y"]));
             float z = std::stod(std::string((*it)["z"]));
@@ -101,8 +101,8 @@ namespace supporting
             support_points.emplace_back(sp);
         }
 
-        for (auto sp : support_points)
-            std::cout << " x:" << sp.pos.x() << " y:" << sp.pos.y() << " z:" << sp.pos.z() << std::endl;
+        // for (auto sp : support_points)
+        //     std::cout << " x:" << sp.pos.x() << " y:" << sp.pos.y() << " z:" << sp.pos.z() << std::endl;
 
         return support_points;
     }
@@ -148,7 +148,7 @@ namespace supporting
                 Slic3r::Polygons holes;
                 if (!jHoles.is_null())
                 {
-                    std::cout << "Holes not null!" << std::endl;
+                    //std::cout << "Holes not null!" << std::endl;
                     for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
                     {
                         //std::cout << "holes: " << *lt << std::endl;
