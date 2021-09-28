@@ -6,10 +6,10 @@ int main(void)
     httplib::Client cli("127.0.0.1", 58080);
 
     httplib::Params params_getPoints{
-        {"mesh", "~/repos/cpp-service/test-server/input/teapot_10elev.stl"},
-        {"config", "~/repos/cpp-service/test-server/input/config.json"},
-        {"slices", "~/repos/cpp-service/test-server/input/slices.json"},
-        {"args", "~/repos/cpp-service/test-server/input/autoargs.json"}};
+        {"mesh", "~/repos/cpp-service/test-input/teapot_10elev.stl"},
+        {"config", "~/repos/cpp-service/test-input/config.json"},
+        {"slices", "~/repos/cpp-service/test-input/slices.json"},
+        {"args", "~/repos/cpp-service/test-input/autoargs.json"}};
 
     if (auto res = cli.Post("/get-points", params_getPoints))
     {
@@ -23,9 +23,9 @@ int main(void)
     }
 
     httplib::Params params_generate{
-        {"mesh", "~/repos/cpp-service/test-server/input/teapot_10elev.stl"},
-        {"config", "~/repos/cpp-service/test-server/input/config.json"},
-        {"points", "~/repos/cpp-service/test-server/input/points.json"}};
+        {"mesh", "~/repos/cpp-service/test-input/teapot_10elev.stl"},
+        {"config", "~/repos/cpp-service/test-input/config.json"},
+        {"points", "~/repos/cpp-service/test-input/points.json"}};
 
     if (auto res = cli.Post("/generate", params_generate))
     {
