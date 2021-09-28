@@ -292,7 +292,7 @@ namespace supporting
         std::cout << "output points are saved as JSON ;)" << std::endl;
     }
 
-    void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
+    void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints, std::string pathOutputMesh)
     {
         // Needed by Prusa configuration.
         float minZ = FLT_MAX;
@@ -317,7 +317,7 @@ namespace supporting
         output_mesh.rawDataArrays(output_coords, output_normals, output_tris);
 
         // Save output mesh as STL
-        stl_writer::WriteStlFile("cpp-service-output.stl", output_coords, output_normals, output_tris);
+        stl_writer::WriteStlFile(pathOutputMesh.c_str(), output_coords, output_normals, output_tris);
         std::cout << "output mesh is saved as STL" << std::endl;
 
         // Save input mesh as STL to debug

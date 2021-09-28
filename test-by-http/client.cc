@@ -26,7 +26,8 @@ int main(void)
     httplib::Params params_generate{
         {"mesh", "~/repos/cpp-service/test-input/teapot_10elev.stl"},
         {"config", "~/repos/cpp-service/test-input/config.json"},
-        {"points", "~/repos/cpp-service/test-input/points.json"}};
+        {"points", "~/repos/cpp-service/test-input/points.json"},
+        {"output", "~/output_mesh.stl"}};
 
     if (auto res = cli.Post("/generate", params_generate))
     {

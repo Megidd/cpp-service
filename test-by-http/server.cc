@@ -45,7 +45,7 @@ int main(void)
 
   svr.Post("/generate", [](const Request &req, Response &res)
            {
-             if (!req.has_param("mesh") || !req.has_param("config") || !req.has_param("points"))
+             if (!req.has_param("mesh") || !req.has_param("config") || !req.has_param("points") || !req.has_param("output"))
              {
                res.set_content("parameters are not as expected", "text/plain");
              }
@@ -54,20 +54,23 @@ int main(void)
                auto mesh = req.get_param_value("mesh");
                auto config = req.get_param_value("config");
                auto points = req.get_param_value("points");
+               auto output = req.get_param_value("output");
 
                std::cout << "mesh: " << mesh << std::endl
                          << "config: " << config << std::endl
-                         << "points: " << points << std::endl;
+                         << "points: " << points << std::endl
+                         << "output: " << output << std::endl;
 
                // Call the logic executable then wait for it to finish
                // https://stackoverflow.com/a/5155626/3405291
                // https://stackoverflow.com/a/31521217/3405291
                char command[100];
                std::sprintf(command,
-                            "../build/cpp-service --generate -mesh %s -config %s -points %s",
+                            "../build/cpp-service --generate -mesh %s -config %s -points %s -outputmesh %s",
                             mesh.c_str(),
                             config.c_str(),
-                            points.c_str());
+                            points.c_str(),
+                            output.c_str());
                std::system(command);
 
                res.set_content("done", "text/plain");

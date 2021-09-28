@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     std::vector<std::string> args(argv + 1, argv + argc);
     std::string pathMesh, pathConfig;
     std::string pathSlices, pathArgs, pathOutputPoints; // Get points
-    std::string pathPoints;                             // Generate
+    std::string pathPoints, pathOutputMesh;             // Generate
 
     Intent intent;
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
         if (*i == "-h" || *i == "--help")
         {
             std::cout << "Syntax: cpp-service --get-points -mesh <stl_file> -config <json_file> -slices <json_file> -args <json_file> -outputpoints <json_file>" << std::endl
-                      << "Syntax: cpp-service --generate   -mesh <stl_file> -config <json_file> -points <json_file>" << std::endl;
+                      << "Syntax: cpp-service --generate   -mesh <stl_file> -config <json_file> -points <json_file> -outputmesh <stl_file>" << std::endl;
             return 0;
         }
         else if (*i == "--get-points")
@@ -62,6 +62,10 @@ int main(int argc, char **argv)
         {
             pathPoints = *++i;
         }
+        else if (*i == "-outputmesh")
+        {
+            pathOutputMesh = *++i;
+        }
     }
 
     // Common for all cases:
@@ -76,7 +80,7 @@ int main(int argc, char **argv)
         break;
     case Generate:
         std::cout << "Generate mesh for points..." << std::endl;
-        supporting::generate(pathMesh, pathConfig, pathPoints);
+        supporting::generate(pathMesh, pathConfig, pathPoints, pathOutputMesh);
         break;
     default:
         std::cout << "Did you use correct system call options?" << std::endl;

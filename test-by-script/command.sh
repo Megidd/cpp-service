@@ -16,4 +16,5 @@ cd ~/repos/cpp-service/build/
  --generate \
  -mesh ~/repos/cpp-service/test-input/teapot_10elev.stl \
  -config ~/repos/cpp-service/test-input/config.json \
- -points ~/repos/cpp-service/test-input/points.json
+ -points ~/repos/cpp-service/test-input/points.json \
+ -outputmesh ~/output_mesh.stl
