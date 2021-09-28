@@ -225,7 +225,7 @@ namespace supporting
         return args;
     }
 
-    void savePoints(const std::vector<Slic3r::sla::SupportPoint> &support_points)
+    void savePoints(const std::vector<Slic3r::sla::SupportPoint> &support_points, std::string pathOutputPoints)
     {
         nlohmann::json jPoints = nlohmann::json::array();
         for (auto point : support_points)
@@ -239,11 +239,11 @@ namespace supporting
         }
 
         // write prettified JSON to file
-        std::ofstream o("auto_points.json");
+        std::ofstream o(pathOutputPoints);
         o << std::setw(4) << jPoints << std::endl;
     }
 
-    void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs)
+    void getPoints(std::string pathMesh, std::string pathConfig, std::string pathSlices, std::string pathArgs, std::string pathOutputPoints)
     {
         std::cout << "Get points..." << std::endl;
 
@@ -288,7 +288,7 @@ namespace supporting
 
         // Get the calculated support points.
         std::vector<Slic3r::sla::SupportPoint> support_points = point_gen.output();
-        savePoints(support_points);
+        savePoints(support_points, pathOutputPoints);
         std::cout << "output points are saved as JSON ;)" << std::endl;
     }
 

@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     // https://stackoverflow.com/a/442137/3405291
     std::vector<std::string> args(argv + 1, argv + argc);
     std::string pathMesh, pathConfig;
-    std::string pathSlices, pathArgs; // Get points
+    std::string pathSlices, pathArgs, pathOutputPoints; // Get points
     std::string pathPoints;           // Generate
 
     Intent intent;
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     {
         if (*i == "-h" || *i == "--help")
         {
-            std::cout << "Syntax: cpp-service --get-points -mesh <stl_file> -config <json_file> -slices <json_file> -args <json_file>" << std::endl
+            std::cout << "Syntax: cpp-service --get-points -mesh <stl_file> -config <json_file> -slices <json_file> -args <json_file> -outputpoints <json_file>" << std::endl
                       << "Syntax: cpp-service --generate   -mesh <stl_file> -config <json_file> -points <json_file>" << std::endl;
             return 0;
         }
@@ -54,6 +54,10 @@ int main(int argc, char **argv)
         {
             pathArgs = *++i;
         }
+        else if (*i == "-outputpoints")
+        {
+            pathOutputPoints = *++i;
+        }
         else if (*i == "-points")
         {
             pathPoints = *++i;
@@ -68,7 +72,7 @@ int main(int argc, char **argv)
     {
     case GetPoints:
         std::cout << "Get auto points..." << std::endl;
-        supporting::getPoints(pathMesh, pathConfig, pathSlices, pathArgs);
+        supporting::getPoints(pathMesh, pathConfig, pathSlices, pathArgs, pathOutputPoints);
         break;
     case Generate:
         std::cout << "Generate mesh for points..." << std::endl;
