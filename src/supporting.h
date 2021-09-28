@@ -269,7 +269,12 @@ namespace supporting
 
         // Get the calculated support points.
         std::vector<Slic3r::sla::SupportPoint> support_points = point_gen.output();
-
+        for (auto point : support_points)
+        {
+            std::cout << "point: " << point.pos.x() << " , "
+                      << point.pos.y() << " , "
+                      << point.pos.z() << std::endl;
+        }
         std::cout << "output points are ready ;)" << std::endl;
     }
 
