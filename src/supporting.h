@@ -118,21 +118,19 @@ namespace supporting
         {
             Slic3r::ExPolygons exps;
 
-            std::cout << "layer: " << *it << std::endl;
+            //std::cout << "layer: " << *it << std::endl;
             auto jExps = (*it)["Expolygons"];
             for (nlohmann::json::iterator jt = jExps.begin(); jt != jExps.end(); ++jt)
             {
-                std::cout << "contour: " << *jt << std::endl;
+                //std::cout << "contour: " << *jt << std::endl;
                 auto jContour = (*jt)["Contour"];
                 Slic3r::Polygon contour;
                 for (nlohmann::json::iterator kt = jContour.begin(); kt != jContour.end(); ++kt)
                 {
-                    std::cout << "x, y: " << *kt << std::endl;
+                    //std::cout << "x, y: " << *kt << std::endl;
                     double x = (*kt)["X"];
-                    // Fixed: [json.exception.type_error.302] type must be string, but is number
-                    std::cout << "x: " << x << std::endl;
+                    //// Fixed: [json.exception.type_error.302] type must be string, but is number
                     double y = (*kt)["Y"];
-                    std::cout << "y: " << y << std::endl;
                     // Account for conversion from floating-point to integer
                     x /= SCALING_FACTOR;
                     y /= SCALING_FACTOR;
@@ -150,13 +148,13 @@ namespace supporting
                     std::cout << "Holes is not null!" << std::endl;
                     for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
                     {
-                        std::cout << "holes: " << *lt << std::endl;
+                        //std::cout << "holes: " << *lt << std::endl;
                         auto jHole = (*lt)["Hole"];
                         Slic3r::Polygon hole;
                         for (nlohmann::json::iterator mt = jHole.begin(); mt != jHole.end(); ++mt)
                         {
-                            std::cout << "hole: " << *mt << std::endl;
-                            // Fixed: [json.exception.type_error.302] type must be string, but is number
+                            //std::cout << "hole: " << *mt << std::endl;
+                            //// Fixed: [json.exception.type_error.302] type must be string, but is number
                             double x = (*mt)["X"];
                             double y = (*mt)["Y"];
                             // Account for conversion from floating-point to integer
