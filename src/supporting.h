@@ -2,6 +2,7 @@
 #define SUPPORTING_H
 
 #include <string>
+#include <random>
 
 #define STL_READER_NO_EXCEPTIONS // functions will return false if an error occurred
 #include "stl_reader.h"
@@ -18,6 +19,7 @@
 #include "libslic3r/SLA/SupportTreeBuilder.hpp"
 #include "libslic3r/SLA/SupportTreeBuildsteps.hpp"
 #include "libslic3r/ExPolygon.hpp"
+#include "libslic3r/SLA/SupportPointGenerator.hpp"
 
 #include <cfloat> // for float max
 
@@ -195,7 +197,8 @@ namespace supporting
         return slices;
     }
 
-    struct Args {
+    struct Args
+    {
         float density = 0.0f;
         float layer_height = 0.0f;
         float min_dist = 0.0f;
@@ -237,6 +240,37 @@ namespace supporting
         std::vector<Slic3r::ExPolygons> slices = loadSlices(pathSlices);
         Args args = loadArgs(pathArgs);
         std::vector<float> slicegrid = Slic3r::grid(args.zMin, args.zMax, args.layer_height);
+
+        assert(slices.size() == slicegrid.size() &&
+               "Assert message: slices and heights should have the same size!");
+
+        // Difference should actually be zero.
+        // But consider a few percents of error due to float type and other unexpected things?
+        assert(std::abs(minZ - args.zMin) < 0.01f * std::abs(minZ) &&
+               "Assert message: are you sure minimum Z is correct?");
+
+        // Create the support point generator
+        Slic3r::sla::SupportPointGenerator::Config autogencfg;
+        autogencfg.head_diameter = float(2 * cfg.head_front_radius_mm);
+        // If density is from 0 to 200, then it is divided by 100 (rival does)
+        // Our UI is from from 1 to 20, so it is divided by 10
+        autogencfg.density_relative = float(args.density / 10.0f);
+        autogencfg.minimal_distance = float(args.min_dist);
+        Slic3r::sla::IndexedMesh emesh = Slic3r::sla::IndexedMesh(input_mesh);
+        Slic3r::sla::SupportPointGenerator point_gen{emesh, autogencfg, [] {}, [](int) {}};
+
+        // Want deterministic behavior? No?
+        // Make the output repeatable? No?
+        //point_gen.seed(0);
+        std::random_device rd;
+        point_gen.seed(rd());
+
+        point_gen.execute(slices, slicegrid);
+
+        // Get the calculated support points.
+        std::vector<Slic3r::sla::SupportPoint> support_points = point_gen.output();
+
+        std::cout << "output points are ready ;)" << std::endl;
     }
 
     void generate(std::string pathMesh, std::string pathConfig, std::string pathPoints)
