@@ -4,12 +4,6 @@
 
 #include "supporting.h"
 
-// // Sample system call by command-line:
-//
-// m3@suse15:~/repos/cpp-service/build> ./cpp-service --get-points -mesh ~/repos/cpp-service/test-server/input/teapot_10elev.stl -config ~/repos/cpp-service/test-server/input/config.json -slices ~/repos/cpp-service/test-server/input/slices.json -args ~/repos/cpp-service/test-server/input/autoargs.json
-//
-// m3@suse15:~/repos/cpp-service/build> ./cpp-service --generate -mesh ~/repos/cpp-service/test-server/input/teapot_10elev.stl -config ~/repos/cpp-service/test-server/input/config.json -points ~/repos/cpp-service/test-server/input/points.json
-
 int main(int argc, char **argv)
 {
     std::cout << "Logic executable started!\n";
