@@ -90,14 +90,10 @@ namespace supporting
         for (nlohmann::json::iterator it = jPoints.begin(); it != jPoints.end(); ++it)
         {
             std::cout << "point: " << *it << std::endl;
-            std::string xStr = (*it)["x"];
-            std::string yStr = (*it)["y"];
-            std::string zStr = (*it)["z"];
-            std::string rStr = (*it)["head_front_radius"];
-            float x = std::stod(xStr);
-            float y = std::stod(yStr);
-            float z = std::stod(zStr);
-            float r = std::stod(rStr);
+            float x = std::stod(std::string((*it)["x"]));
+            float y = std::stod(std::string((*it)["y"]));
+            float z = std::stod(std::string((*it)["z"]));
+            float r = std::stod(std::string((*it)["head_front_radius"]));
             Slic3r::sla::SupportPoint sp = Slic3r::sla::SupportPoint(x, y, z, r);
             support_points.emplace_back(sp);
         }
@@ -120,7 +116,72 @@ namespace supporting
         // iterate the array
         for (nlohmann::json::iterator it = jSlices["Layers"].begin(); it != jSlices["Layers"].end(); ++it)
         {
-            std::cout << "layer: " << *it << std::endl;
+            Slic3r::ExPolygons exps;
+
+            //std::cout << "layer: " << *it << std::endl;
+            auto jExps = (*it)["Expolygons"];
+            for (nlohmann::json::iterator jt = jExps.begin(); jt != jExps.end(); ++jt)
+            {
+                //std::cout << "contour: " << *jt << std::endl;
+                auto jContour = (*jt)["Contour"];
+                Slic3r::Polygon contour;
+                for (nlohmann::json::iterator kt = jContour.begin(); kt != jContour.end(); ++kt)
+                {
+                    std::cout << "x, y: " << *kt << std::endl;
+                    double x = std::stod(std::string((*kt)["X"]));
+                    double y = std::stod(std::string((*kt)["Y"]));
+                    // Account for conversion from floating-point to integer
+                    x /= SCALING_FACTOR;
+                    y /= SCALING_FACTOR;
+                    // For some reason, slicing output points are mirrored in Y direction
+                    // TODO: figure out why
+                    y = -y;
+                    // Point class stores coordinates as integer
+                    contour.points.emplace_back(Slic3r::Point(x, y));
+                }
+
+                auto jHoles = (*jt)["Holes"];
+                Slic3r::Polygons holes;
+                for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
+                {
+                    auto jHole = (*lt)["Hole"];
+                    Slic3r::Polygon hole;
+                    for (nlohmann::json::iterator mt = jHole.begin(); mt != jHole.end(); ++mt)
+                    {
+                        double x = std::stod(std::string((*mt)["X"]));
+                        double y = std::stod(std::string((*mt)["Y"]));
+                        // Account for conversion from floating-point to integer
+                        x /= SCALING_FACTOR;
+                        y /= SCALING_FACTOR;
+                        // For some reason, slicing output points are mirrored in Y direction
+                        // TODO: figure out why
+                        y = -y;
+                        // Point class stores coordinates as integer
+                        hole.points.emplace_back(Slic3r::Point(x, y));
+                    }
+
+                    // Previously, a hole was added with empty points.
+                    // That was causing a runtime error.
+                    // Currently, a hole is added only if its points are non-empty.
+                    // Therefore fixing the runtime error.
+                    if (hole.points.size() > 0)
+                        holes.emplace_back(hole);
+                }
+
+                Slic3r::ExPolygon exp;
+
+                if (holes.size() > 0)
+                {
+                    exp.contour = contour;
+                    exp.holes = holes;
+                }
+                else
+                    exp.contour = contour;
+
+                exps.emplace_back(exp);
+            }
+
+            slices.emplace_back(exps);
         }
 
         return slices;
