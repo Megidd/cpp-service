@@ -145,7 +145,7 @@ namespace supporting
                 Slic3r::Polygons holes;
                 if (!jHoles.is_null())
                 {
-                    std::cout << "Holes is not null!" << std::endl;
+                    std::cout << "Holes not null!" << std::endl;
                     for (nlohmann::json::iterator lt = jHoles.begin(); lt != jHoles.end(); ++lt)
                     {
                         //std::cout << "holes: " << *lt << std::endl;
