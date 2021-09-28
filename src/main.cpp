@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     std::vector<std::string> args(argv + 1, argv + argc);
     std::string pathMesh, pathConfig;
     std::string pathSlices, pathArgs, pathOutputPoints; // Get points
-    std::string pathPoints;           // Generate
+    std::string pathPoints;                             // Generate
 
     Intent intent;
 

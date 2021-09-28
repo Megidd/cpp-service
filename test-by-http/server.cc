@@ -36,8 +36,7 @@ int main(void)
                             config.c_str(),
                             slices.c_str(),
                             args.c_str(),
-                            output.c_str()
-                            );
+                            output.c_str());
                std::system(command);
 
                res.set_content("done", "text/plain");

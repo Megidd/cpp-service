@@ -10,8 +10,7 @@ int main(void)
         {"config", "~/repos/cpp-service/test-input/config.json"},
         {"slices", "~/repos/cpp-service/test-input/slices.json"},
         {"args", "~/repos/cpp-service/test-input/autoargs.json"},
-        {"output", "~/auto_points.json"}
-        };
+        {"output", "~/auto_points.json"}};
 
     if (auto res = cli.Post("/get-points", params_getPoints))
     {
