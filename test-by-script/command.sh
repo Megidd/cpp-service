@@ -2,7 +2,7 @@
 
 # System call by command-line:
 
-cd ~/repos/cpp-service/build/
+cd ../build/
 
 ### Following command generates output mesh for manual placeholders.
 
