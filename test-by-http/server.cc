@@ -31,7 +31,7 @@ int main(void)
                // https://stackoverflow.com/a/31521217/3405291
                char command[100];
                std::sprintf(command,
-                            "../build/cpp-service --get-points -mesh %s -config %s -slices %s -args %s -outputpoints %s",
+                            "../build/cpp-service --get-points -mesh %s -config %s -slices %s -args %s -output %s",
                             mesh.c_str(),
                             config.c_str(),
                             slices.c_str(),
@@ -66,7 +66,7 @@ int main(void)
                // https://stackoverflow.com/a/31521217/3405291
                char command[100];
                std::sprintf(command,
-                            "../build/cpp-service --generate -mesh %s -config %s -points %s -outputmesh %s",
+                            "../build/cpp-service --generate -mesh %s -config %s -points %s -output %s",
                             mesh.c_str(),
                             config.c_str(),
                             points.c_str(),
