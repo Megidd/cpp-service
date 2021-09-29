@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "supporting.h"
+#include "hollowing.h"
 
 int main(int argc, char **argv)
 {
@@ -86,6 +87,7 @@ int main(int argc, char **argv)
         break;
     case Hollow:
         std::cout << "Hollowing..." << std::endl;
+        hollowing::hollow(pathMesh, pathConfig, pathOutput);
         break;
     default:
         std::cout << "Did you use correct system call options?" << std::endl;
