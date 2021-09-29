@@ -9,6 +9,8 @@
 
 #include "stl_writer.h"
 
+#include "json.hpp"
+
 namespace hollowing
 {
     // Simplified mesh just to provide mesh adaptor for OVDB
@@ -198,9 +200,35 @@ namespace hollowing
         std::cout << "mesh is saved as STL: " << path << std::endl;
     }
 
+    struct HollowingConfig
+    {
+        double min_thickness = 2.;
+        double quality = 0.5;
+        double closing_distance = 0.5;
+        bool enabled = true;
+    };
+
+    HollowingConfig loadConfig(std::string pathConfig)
+    {
+        // read JSON file
+        std::ifstream fConfig(pathConfig.c_str());
+        nlohmann::json jConfig;
+        fConfig >> jConfig;
+        std::cout << "config: " << jConfig << std::endl;
+
+        HollowingConfig cfg;
+        cfg.min_thickness = jConfig["min_thickness"];
+        cfg.quality = jConfig["quality"];
+        cfg.closing_distance = jConfig["closing_distance"];
+        cfg.enabled = jConfig["enabled"];
+
+        return cfg;
+    }
+
     void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutputMesh)
     {
         Contour input_mesh = loadMesh(pathMesh);
+        HollowingConfig cfg = loadConfig(pathConfig);
         saveMesh(input_mesh, "input_mesh_to_be_hollowed.stl");
         std::cout << "Hollowing started..." << std::endl;
     }
