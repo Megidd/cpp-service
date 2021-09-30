@@ -4,6 +4,12 @@
 #include <string>
 #include <iostream>
 
+// https://github.com/AcademySoftwareFoundation/openvdb/issues/139
+#define OPENVDB_8_ABI_COMPATIBLE
+#include <openvdb/openvdb.h>
+#include <openvdb/tools/MeshToVolume.h>
+#include <openvdb/tools/LevelSetRebuild.h>
+
 #define STL_READER_NO_EXCEPTIONS // functions will return false if an error occurred
 #include "stl_reader.h"
 
@@ -225,6 +231,82 @@ namespace hollowing
         return cfg;
     }
 
+    inline std::array<float, 3> to_vec3d(const openvdb::Vec3s &v) { return std::array<float, 3>{{v.x(), v.y(), v.z()}}; }
+    inline std::array<uint, 3> to_vec3i(const openvdb::Vec3I &v) { return std::array<uint, 3>{uint(v[0]), uint(v[1]), uint(v[2])}; }
+    inline std::array<uint, 4> to_vec4i(const openvdb::Vec4I &v) { return std::array<uint, 4>{uint(v[0]), uint(v[1]), uint(v[2]), uint(v[3])}; }
+
+    class ContourDataAdapter
+    {
+    public:
+        const Contour &mesh;
+
+        size_t polygonCount() const { return mesh.faces3.size() + mesh.faces4.size(); }
+        size_t pointCount() const { return mesh.points.size(); }
+        size_t vertexCount(size_t n) const { return n < mesh.faces3.size() ? 3 : 4; }
+
+        // Return position pos in local grid index space for polygon n and vertex v
+        void getIndexSpacePoint(size_t n, size_t v, openvdb::Vec3d &pos) const
+        {
+            size_t vidx = 0;
+            if (n < mesh.faces3.size())
+                vidx = size_t(mesh.faces3.at(n).at(v));
+            else
+                vidx = size_t(mesh.faces4.at(n - mesh.faces3.size()).at(v));
+
+            std::array<float, 3> p = mesh.points[vidx];
+            pos = {p.at(0), p.at(1), p.at(2)};
+        }
+    };
+
+    openvdb::FloatGrid::Ptr mesh_to_grid(
+        const Contour &mesh, const openvdb::math::Transform &tr = {}, float exteriorBandWidth = 3.0f, float interiorBandWidth = 3.0f, int flags = 0)
+    {
+        openvdb::initialize();
+        return openvdb::tools::meshToVolume<openvdb::FloatGrid>(
+            ContourDataAdapter{mesh}, tr, exteriorBandWidth, interiorBandWidth,
+            flags);
+    }
+
+    openvdb::FloatGrid::Ptr redistance_grid(
+        const openvdb::FloatGrid &grid, double iso, double ext_range = 3., double int_range = 3.)
+    {
+        return openvdb::tools::levelSetRebuild(grid, float(iso), float(ext_range), float(int_range));
+    }
+
+    template <class Grid>
+    Contour _volumeToMesh(
+        const Grid &grid, double isovalue, double adaptivity, bool relaxDisorientedTriangles)
+    {
+        openvdb::initialize();
+
+        std::vector<openvdb::Vec3s> points;
+        std::vector<openvdb::Vec3I> triangles;
+        std::vector<openvdb::Vec4I> quads;
+
+        openvdb::tools::volumeToMesh(grid, points, triangles, quads, isovalue,
+                                     adaptivity, relaxDisorientedTriangles);
+
+        Contour ret;
+        ret.points.reserve(points.size());
+        ret.faces3.reserve(triangles.size());
+        ret.faces4.reserve(quads.size());
+
+        for (auto &v : points)
+            ret.points.emplace_back(to_vec3d(v));
+        for (auto &v : triangles)
+            ret.faces3.emplace_back(to_vec3i(v));
+        for (auto &v : quads)
+            ret.faces4.emplace_back(to_vec4i(v));
+
+        return ret;
+    }
+
+    Contour grid_to_contour(
+        const openvdb::FloatGrid &grid, double isovalue, double adaptivity, bool relaxDisorientedTriangles = true)
+    {
+        return _volumeToMesh(grid, isovalue, adaptivity, relaxDisorientedTriangles);
+    }
+
     Contour generate_interior(
         const Contour &mesh, double min_thickness, double voxel_scale, double closing_dist)
     {
@@ -288,13 +370,16 @@ namespace hollowing
         return meshptr;
     }
 
-    void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutputMesh)
+    void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutput)
     {
         Contour input_mesh = loadMesh(pathMesh);
         HollowingConfig cfg = loadConfig(pathConfig);
         saveMesh(input_mesh, "input_mesh_to_be_hollowed.stl");
         std::cout << "Hollowing started..." << std::endl;
-        std::unique_ptr<Contour> out_mesh_ptr = generate_interior(input_mesh, cfg);
+        std::unique_ptr<Contour> in_mesh_ptr = std::make_unique<Contour>(input_mesh);
+        std::unique_ptr<Contour> out_mesh_ptr = generate_interior(in_mesh_ptr, cfg);
+        Contour output_mesh = *out_mesh_ptr.get();
+        saveMesh(output_mesh, pathOutput);
     }
 } // namespace hollowing
 #endif // HOLLOWING_H

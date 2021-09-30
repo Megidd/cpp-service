@@ -322,4 +322,4 @@ include(CPack)
 # fatal error C1128: number of sections exceeded object file format limit: compile with /bigobj
 
 # https://www.reddit.com/r/Qt5/comments/3so0wp/msvc_2010_how_to_add_bigobj_flag/d1vx6ac?utm_source=share&utm_medium=web2x&context=3
-win32: QMAKE_CXXFLAGS += -bigobj
+#win32: QMAKE_CXXFLAGS += -bigobj
