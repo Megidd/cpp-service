@@ -216,3 +216,110 @@ include(CPack)
 ### Specifiy 64-bit to avoid linker errors:
 # cmake  -G "Visual Studio 15 2017 Win64" .. -DCMAKE_INSTALL_PREFIX=./installdir
 # cmake --build . --target install --config Release
+
+#################################################################################
+# OpenVDB on Linux
+#################################################################################
+
+# Hollowing feature needs this
+# Shared library files are needed too i.e. *.so files
+
+### How to install on Linux openSUSE Leap 15.1
+#
+# sudo zypper in libboost_iostreams1_66_0-devel
+# sudo zypper in libboost_system1_66_0-devel
+# sudo zypper in libboost_regex1_66_0-devel
+# sudo zypper in tbb-devel
+# sudo zypper in ilmbase-devel
+# sudo zypper in openexr-devel
+#
+### Install Blosc by:
+### https://github.com/AcademySoftwareFoundation/openvdb#linux
+#
+# git clone https://github.com/AcademySoftwareFoundation/openvdb.git
+# cd openvdb/
+### Remain on branch master, or check a specific version. Whichever has less trouble:
+# git checkout v8.1.0 -b v8.1.0
+# mkdir build
+# cd build/
+# cmake ..
+# make -j4
+# sudo make install
+
+#################################################################################
+# OpenVDB on macOS
+#################################################################################
+
+### How to install
+#
+# brew install boost
+# brew install tbb
+# brew install ilmbase
+# brew install openexr
+#
+### Install Blosc by:
+### https://github.com/AcademySoftwareFoundation/openvdb#macos
+#
+# git clone https://github.com/AcademySoftwareFoundation/openvdb.git
+# cd openvdb/
+### Remain on master or check a specific version, whichever is smoother:
+### git checkout v7.1.0 -b v7.1.0
+# mkdir build
+# cd build/
+# cmake ..
+# make -j4
+# make install
+
+#################################################################################
+# OpenVDB on Windows
+#################################################################################
+
+### How to install
+#
+# cd %userprofile%\repos\
+# git clone https://github.com/Microsoft/vcpkg
+# cd vcpkg
+# bootstrap-vcpkg.bat
+# bootstrap-vcpkg -disableMetrics
+#
+# vcpkg install zlib:x64-windows
+# vcpkg install blosc:x64-windows
+# vcpkg install tbb:x64-windows
+# vcpkg install boost-iostreams:x64-windows
+# vcpkg install boost-system:x64-windows
+# vcpkg install boost-any:x64-windows
+# vcpkg install boost-algorithm:x64-windows
+# vcpkg install boost-uuid:x64-windows
+# vcpkg install boost-interprocess:x64-windows
+#
+# cd %userprofile%\repos\
+# git clone https://github.com/AcademySoftwareFoundation/openvdb.git
+# cd openvdb
+### Note that we are on branch master
+### Could use `git checkout v7.2.3` but CMake config would throw errors
+# mkdir build
+# cd build
+# cmake -DCMAKE_TOOLCHAIN_FILE=C:\Users\m3\repos\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows -A x64 ..
+### Open Command Prompt for VS 2017 with admin privileges, for this last step:
+# cmake --build . --parallel 4 --config Release --target install
+#
+### Fix linker:
+### error: LNK1104: cannot open file 'Half-2_5.lib'
+# vcpkg.exe install ilmbase:x64-windows
+
+# Hollowing feature needs this
+# ** note: copy DLL next to application executable
+
+#################################################################################
+# Big OBJ on Windows
+#################################################################################
+
+# To resolve the following error.
+# The error occurs by heavily using a library of C++ templates like OVDB
+# https://stackoverflow.com/q/15110580/3405291
+
+# C:\Users\m3\repos\qt3d-editor\editorlib\src\hollowinghandler\hollowing\openvdbutils.cpp :
+# fatal error C1128: number of sections exceeded object file format limit: compile with /bigobj
+
+# https://www.reddit.com/r/Qt5/comments/3so0wp/msvc_2010_how_to_add_bigobj_flag/d1vx6ac?utm_source=share&utm_medium=web2x&context=3
+win32: QMAKE_CXXFLAGS += -bigobj
