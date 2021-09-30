@@ -77,6 +77,37 @@ int main(void)
              }
            });
 
+  svr.Post("/hollow", [](const Request &req, Response &res)
+           {
+             if (!req.has_param("mesh") || !req.has_param("config") || !req.has_param("output"))
+             {
+               res.set_content("parameters are not as expected", "text/plain");
+             }
+             else
+             {
+               auto mesh = req.get_param_value("mesh");
+               auto config = req.get_param_value("config");
+               auto output = req.get_param_value("output");
+
+               std::cout << "mesh: " << mesh << std::endl
+                         << "config: " << config << std::endl
+                         << "output: " << output << std::endl;
+
+               // Call the logic executable then wait for it to finish
+               // https://stackoverflow.com/a/5155626/3405291
+               // https://stackoverflow.com/a/31521217/3405291
+               char command[1024];
+               std::sprintf(command,
+                            "../build/cpp-service --hollow -mesh %s -config %s -output %s",
+                            mesh.c_str(),
+                            config.c_str(),
+                            output.c_str());
+               std::system(command);
+
+               res.set_content("done", "text/plain");
+             }
+           });
+
   int port = 58080;
   std::string address = "0.0.0.0"; // All addresses
   std::cout << "=> service going to listen on port: " << port << std::endl;
