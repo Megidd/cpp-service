@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+### To be able to debug with gdb
+SET(CMAKE_CXX_FLAGS  "-g")
+
 include_directories("deps/eigen-3.3.9")                 # header-only =)
 include_directories("deps/libigl-2.3.0/include")        # header-only =)
 include_directories("src")
