@@ -1,0 +1,6 @@
+{
+    "min_thickness": 2.0,
+    "quality": 0.5,
+    "closing_distance": 0.5,
+    "enabled": true
+}
