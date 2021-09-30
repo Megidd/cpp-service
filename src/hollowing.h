@@ -225,12 +225,43 @@ namespace hollowing
         return cfg;
     }
 
+    std::unique_ptr<Contour> generate_interior(const std::unique_ptr<Contour> &mesh,
+                                               const HollowingConfig &cfg)
+    {
+        static const double MIN_OVERSAMPL = 3.;
+        static const double MAX_OVERSAMPL = 8.;
+
+        // I can't figure out how to increase the grid resolution through openvdb
+        // API so the model will be scaled up before conversion and the result
+        // scaled down. Voxels have a unit size. If I set voxelSize smaller, it
+        // scales the whole geometry down, and doesn't increase the number of
+        // voxels.
+        //
+        // max 8x upscale, min is native voxel size
+        auto voxel_scale = MIN_OVERSAMPL + (MAX_OVERSAMPL - MIN_OVERSAMPL) * cfg.quality;
+
+        std::unique_ptr<Contour> meshptr = std::make_unique<Contour>(
+            generate_interior(
+                *mesh.get(), cfg.min_thickness, voxel_scale, cfg.closing_distance));
+
+        if (meshptr && !meshptr->empty())
+        {
+            // Commenting out normal flip generates acceptable final result
+            // Porbably our polygon index order assumption is different
+            // TODO: investigate the root cause
+            //meshptr.get()->flip_normals();
+        }
+
+        return meshptr;
+    }
+
     void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutputMesh)
     {
         Contour input_mesh = loadMesh(pathMesh);
         HollowingConfig cfg = loadConfig(pathConfig);
         saveMesh(input_mesh, "input_mesh_to_be_hollowed.stl");
         std::cout << "Hollowing started..." << std::endl;
+        std::unique_ptr<Contour> out_mesh_ptr = generate_interior(input_mesh, cfg);
     }
 } // namespace hollowing
 #endif // HOLLOWING_H
