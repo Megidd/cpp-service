@@ -225,6 +225,39 @@ namespace hollowing
         return cfg;
     }
 
+    Contour generate_interior(
+        const Contour &mesh, double min_thickness, double voxel_scale, double closing_dist)
+    {
+        // Make a copy to be able to modify
+        Contour imesh{mesh};
+
+        imesh.scale(voxel_scale);
+
+        double offset = voxel_scale * min_thickness;
+        double D = voxel_scale * closing_dist;
+        float out_range = 0.1f * float(offset);
+        float in_range = 1.1f * float(offset + D);
+
+        auto gridptr = mesh_to_grid(imesh, {}, out_range, in_range);
+
+        if (closing_dist > .0)
+        {
+            gridptr = redistance_grid(*gridptr, -(offset + D), double(in_range));
+        }
+        else
+        {
+            D = -offset;
+        }
+
+        double iso_surface = D;
+        double adaptivity = 0.;
+        Contour omesh = grid_to_contour(*gridptr, iso_surface, adaptivity);
+
+        omesh.scale(1. / voxel_scale);
+
+        return omesh;
+    }
+
     std::unique_ptr<Contour> generate_interior(const std::unique_ptr<Contour> &mesh,
                                                const HollowingConfig &cfg)
     {
