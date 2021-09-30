@@ -378,8 +378,9 @@ namespace hollowing
         std::cout << "Hollowing started..." << std::endl;
         std::unique_ptr<Contour> in_mesh_ptr = std::make_unique<Contour>(input_mesh);
         std::unique_ptr<Contour> out_mesh_ptr = generate_interior(in_mesh_ptr, cfg);
-        Contour output_mesh = *out_mesh_ptr.get();
-        saveMesh(output_mesh, pathOutput);
+        saveMesh(*out_mesh_ptr.get(), "interior_mesh.stl");
+        if (out_mesh_ptr) in_mesh_ptr.get()->merge(*out_mesh_ptr);
+        saveMesh(*in_mesh_ptr.get(), pathOutput);
     }
 } // namespace hollowing
 #endif // HOLLOWING_H
