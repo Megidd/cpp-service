@@ -19,6 +19,7 @@ include_directories("deps/cereal-1.3.0/include")        # header-only =)
 include_directories("src/glu-libtess/include/")         # linked to
 include_directories("deps/libnest2d/build/installdir/include/") # linked to
 include_directories("deps/nlopt/build/installdir/include/") # linked to
+include_directories("/usr/local/include")                   # linked to OpenVDB
 
 # https://stackoverflow.com/a/41909627/3405291
 find_library(LIB_TBB                NAMES tbb               HINTS "deps/tbb/lib/intel64/gcc4.8")
@@ -30,6 +31,8 @@ find_library(LIB_TBB_preview        NAMES tbb_preview       HINTS "deps/tbb/lib/
 find_library(LIB_glu_libtess NAMES glu-libtess HINTS "src/glu-libtess/build/")
 find_library(LIB_nest2d NAMES nest2d_clipper_nlopt HINTS "deps/libnest2d/build/installdir/lib/")
 find_library(LIB_nlopt NAMES nlopt HINTS "deps/nlopt/build/installdir/lib64/")
+
+find_library(LIB_vdb NAMES openvdb HINTS "/usr/local/lib64/")
 
 # https://stackoverflow.com/a/2110796/3405291
 AUX_SOURCE_DIRECTORY(src/libslic3r/             SRC_libslic3r)
@@ -55,6 +58,7 @@ ${LIB_TBB_preview}
 ${LIB_glu_libtess}
 ${LIB_nest2d}
 ${LIB_nlopt}
+${LIB_vdb}
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
