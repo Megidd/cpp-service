@@ -29,7 +29,7 @@ int main(void)
                // Call the logic executable then wait for it to finish
                // https://stackoverflow.com/a/5155626/3405291
                // https://stackoverflow.com/a/31521217/3405291
-               char command[100];
+               char command[1024];
                std::sprintf(command,
                             "../build/cpp-service --get-points -mesh %s -config %s -slices %s -args %s -output %s",
                             mesh.c_str(),
@@ -64,7 +64,7 @@ int main(void)
                // Call the logic executable then wait for it to finish
                // https://stackoverflow.com/a/5155626/3405291
                // https://stackoverflow.com/a/31521217/3405291
-               char command[100];
+               char command[1024];
                std::sprintf(command,
                             "../build/cpp-service --generate -mesh %s -config %s -points %s -output %s",
                             mesh.c_str(),
