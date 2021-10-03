@@ -387,6 +387,54 @@ namespace hollowing
         mesh->faces4.clear();
     }
 
+    void setOriginToBBoxCenter(std::unique_ptr<Contour> &mesh_ptr)
+    {
+        Contour *mesh = mesh_ptr.get();
+
+        std::array<float, 3> min = std::array<float, 3>{FLT_MAX, FLT_MAX, FLT_MAX};
+        std::array<float, 3> max = std::array<float, 3>{-FLT_MAX, -FLT_MAX, -FLT_MAX};
+
+        int length = mesh->points.size();
+        for (int i = 0; i < length; ++i)
+        {
+
+            std::array<float, 3> vertex = mesh->points.at(i);
+            float x = vertex.at(0);
+            float y = vertex.at(1);
+            float z = vertex.at(2);
+
+            if (x < min.at(0))
+                min[0] = x;
+            if (y < min.at(1))
+                min[1] = y;
+            if (z < min.at(2))
+                min[2] = z;
+
+            if (x > max.at(0))
+                max[0] = x;
+            if (y > max.at(1))
+                max[1] = y;
+            if (z > max.at(2))
+                max[2] = z;
+        }
+
+        std::array<float, 3> meshExtents = std::array<float, 3>{max.at(0) - min.at(0), max.at(1) - min.at(1), max.at(2) - min.at(2)};
+        std::array<float, 3> meshCenter = std::array<float, 3>{min.at(0) + (meshExtents.at(0) / 2.0f), min.at(1) + (meshExtents.at(1) / 2.0f), min.at(2) + (meshExtents.at(2) / 2.0f)};
+
+        std::cout << "min ==" << min.at(0) << " , " << min.at(1) << " , " << min.at(2) << std::endl;
+        std::cout << "max ==" << max.at(0) << " , " << max.at(1) << " , " << max.at(2) << std::endl;
+        std::cout << "mesh extents ==" << meshExtents.at(0) << " , " << meshExtents.at(1) << " , " << meshExtents.at(2) << std::endl;
+        std::cout << "mesh center ==" << meshCenter.at(0) << " , " << meshCenter.at(1) << " , " << meshCenter.at(2) << std::endl;
+
+        // Move vertices so that bounding box center (mesh center) would move to coordinate origin (0.0f, 0.0f, 0.0f)
+        for (int i = 0; i < length; ++i)
+            mesh->points[i] = std::array<float, 3>{mesh->points.at(i).at(0) - meshCenter.at(0),
+                                                   mesh->points.at(i).at(1) - meshCenter.at(1),
+                                                   mesh->points.at(i).at(2) - meshCenter.at(2)};
+
+        return;
+    }
+
     void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutput)
     {
         Contour input_mesh = loadMesh(pathMesh);
@@ -399,7 +447,9 @@ namespace hollowing
         saveMesh(*out_mesh_ptr.get(), "interior_mesh.stl");
         if (out_mesh_ptr)
             in_mesh_ptr.get()->merge(*out_mesh_ptr);
+        setOriginToBBoxCenter(in_mesh_ptr);
         saveMesh(*in_mesh_ptr.get(), pathOutput);
     }
+
 } // namespace hollowing
 #endif // HOLLOWING_H
