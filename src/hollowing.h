@@ -399,7 +399,6 @@ namespace hollowing
         saveMesh(*out_mesh_ptr.get(), "interior_mesh.stl");
         if (out_mesh_ptr)
             in_mesh_ptr.get()->merge(*out_mesh_ptr);
-        quad2tri(in_mesh_ptr);
         saveMesh(*in_mesh_ptr.get(), pathOutput);
     }
 } // namespace hollowing
