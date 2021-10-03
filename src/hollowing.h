@@ -370,6 +370,23 @@ namespace hollowing
         return meshptr;
     }
 
+    // Convert quad polygons (rectangular) to triangle polygons.
+    // Only triangles are considered when saving STL.
+    void quad2tri(std::unique_ptr<Contour> &mesh_ptr)
+    {
+        Contour *mesh = mesh_ptr.get();
+        // Handle quads
+        for (std::array<uint, 4> i : mesh->faces4)
+        {
+            // Convert one quad to two triangles
+            mesh->faces3.emplace_back(std::array<uint, 3>{i.at(0), i.at(1), i.at(2)});
+            mesh->faces3.emplace_back(std::array<uint, 3>{i.at(2), i.at(3), i.at(0)});
+        }
+
+        // To free up memory.
+        mesh->faces4.clear();
+    }
+
     void hollow(std::string pathMesh, std::string pathConfig, std::string pathOutput)
     {
         Contour input_mesh = loadMesh(pathMesh);
@@ -378,8 +395,11 @@ namespace hollowing
         std::cout << "Hollowing started..." << std::endl;
         std::unique_ptr<Contour> in_mesh_ptr = std::make_unique<Contour>(input_mesh);
         std::unique_ptr<Contour> out_mesh_ptr = generate_interior(in_mesh_ptr, cfg);
+        quad2tri(out_mesh_ptr);
         saveMesh(*out_mesh_ptr.get(), "interior_mesh.stl");
-        if (out_mesh_ptr) in_mesh_ptr.get()->merge(*out_mesh_ptr);
+        if (out_mesh_ptr)
+            in_mesh_ptr.get()->merge(*out_mesh_ptr);
+        quad2tri(in_mesh_ptr);
         saveMesh(*in_mesh_ptr.get(), pathOutput);
     }
 } // namespace hollowing
